@@ -1,12 +1,12 @@
 <template>
   <div class="home">
-    <HelloWorld :storage="storage" :category="categories"/>
+    <RegisterItemForm :storage="storage" :category="categories"/>
   </div>
 </template>
 
 <script>
 
-import HelloWorld from "../components/HelloWorld"
+import RegisterItemForm from "../components/RegisterItemForm"
 import $api from "../axios";
 
 export default {
@@ -28,7 +28,7 @@ export default {
     this.categories = resCategories.data
   },
   components: {
-    HelloWorld
+    RegisterItemForm
   }
 }
 </script>
