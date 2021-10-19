@@ -5,7 +5,7 @@
       <small>{{item[2]}}</small>
       <img :src="'/img/'+item[3]" alt="Изображение товара">
       <p>{{new Intl.NumberFormat('ru-RU', { style: 'currency', currency: 'RUB' }).format(item[4])}}</p>
-      <a href="#">Купить</a>
+      <RouterLink :to="'/item/'+item[0]">Купить</RouterLink>
     </div>
   </div>
 </template>

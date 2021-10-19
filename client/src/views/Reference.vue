@@ -1,8 +1,8 @@
 <template>
   <div>
     Справочные таблицы
-    <RouterLink to="/workers">Работники</RouterLink>
-    <RouterLink to="/sales">Продажи</RouterLink>
+    <RouterLink class="link" to="/workers">Работники</RouterLink>
+    <RouterLink class="link" to="/sales">Продажи</RouterLink>
   </div>
 </template>
 
@@ -18,3 +18,11 @@
     }
   }
 </script>
+
+<style scoped>
+  .link {
+    display: block;
+    margin: 10px;
+    font-size: 18px;
+  }
+</style>
