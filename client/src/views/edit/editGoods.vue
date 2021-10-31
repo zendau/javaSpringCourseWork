@@ -11,17 +11,21 @@
     </tr>
     </thead>
     <tbody>
-    <tr v-for="(item, index) in bookedItems" :key="item[0]">
-      <td>{{index+1}}</td>
-      <td>{{item[2]}}</td>
-      <td> <router-link :to="'/item/'+item[1]">{{item[1]}}</router-link></td>
-      <td>{{item[3]}}</td>
-      <td>{{item[4]}}</td>
-      <td>{{item[5]}}</td>
+    <tr v-for="item in goods" :key="item[0]">
+      <td>{{item[0]}}</td>
+      <td><input type="text" :value="item[1]"></td>
       <td>
-        <select name="" id="">
-          <option disabled value="" selected>Выберите курьера</option>
-          <option v-for="courier in couriers" :key="courier">{{courier[1]}}({{courier[0]}})</option>
+        <select name="" id="" v-model="item[2]">
+          <option disabled value="" selected>Выберите категорию</option>
+          <option v-for="category in categories" :key="category">{{category}}</option>
+        </select>
+      </td>
+      <td><input type="text" :value="item[3]"></td>
+      <td><input type="text" :value="item[4]"></td>
+      <td>
+        <select name="" id="" v-model="item[5]">
+          <option disabled value="" selected>Выберите склад</option>
+          <option v-for="storage in storages" :key="storage">{{storage}}</option>
         </select>
       </td>
     </tr>
@@ -37,18 +41,23 @@ export default {
   name: "editGoods",
   data() {
     return {
-      couriers: [],
-      bookedItems: []
+      storages: [],
+      categories: [],
+      goods: []
     }
   },
   async mounted() {
-    const resCouriers = await $api.get("/goods/couriers")
-    this.couriers = resCouriers.data
+    const resCategory = await $api.get("/goods/category")
+    this.categories = resCategory.data
 
-    const resBookedItems = await $api.get("/goods/BookedItems")
-    this.bookedItems = resBookedItems.data
+    const resStorages = await $api.get("/goods/storage")
+    this.storages = resStorages.data
 
-    console.log(this.couriers)
+    const resGoods = await $api.get("/goods/items")
+    this.goods = resGoods.data
+
+    console.log(this.categories, this.storages, this.goods)
+
   }
 }
 </script>

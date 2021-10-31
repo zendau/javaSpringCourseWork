@@ -1,13 +1,114 @@
 <template>
-  <div></div>
+  <table class="table">
+    <thead>
+    <tr>
+      <th>№</th>
+      <th>Дата создания</th>
+      <th>Номер товара</th>
+      <th>Кол-во</th>
+      <th>Цена</th>
+      <th>Карточка складского учета</th>
+      <th>Номер накладной</th>
+      <th>Номер кладовщика</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr v-for="item in waybills" :key="item[0]">
+      <td>{{item[0]}}</td>
+      <td><input type="date" :value="item[1]"></td>
+      <td>
+        <select name="" id="" v-model="item[2]">
+          <option disabled value="" selected>Выберите номер товара</option>
+          <option v-for="good in goods" :key="good[0]">{{good[0]}}</option>
+        </select>
+      </td>
+      <td><input type="number" :value="item[3]"></td>
+      <td><input type="number" :value="item[4]"></td>
+      <td>
+        <select name="" id="" v-model="item[5]">
+          <option disabled value="" selected>Выберите карточку складского учета</option>
+          <option v-for="waybill in SCCs" :key="waybill[0]">{{waybill[0]}}</option>
+        </select>
+      </td>
+      <td><input type="text" :value="item[6]"></td>
+      <td>
+        <select name="" id="" v-model="item[7]">
+          <option disabled value="" selected>Выберите карточку складского учета</option>
+          <option v-for="worker in workers" :key="worker[0]">{{worker[0]}}</option>
+        </select>
+      </td>
+    </tr>
+    </tbody>
+  </table>
+  <button>Сохранить</button>
 </template>
 
 <script>
+import $api from "../../axios";
+
 export default {
-  name: "editWaybills"
+  name: "editStorage",
+  data() {
+    return {
+      waybills: [],
+      workers: [],
+      SCCs: [],
+      goods: []
+    }
+  },
+  async mounted() {
+    const resWaybills = await $api.get("/goods/waybills")
+    this.waybills = resWaybills.data
+
+    const resWorkers = await $api.get("/goods/workers")
+    this.workers = resWorkers.data
+
+    const resSCCs = await $api.get("/goods/SCCs")
+    this.SCCs = resSCCs.data
+
+    const resGoods = await $api.get("/goods/items")
+    this.goods = resGoods.data
+
+
+  }
 }
 </script>
 
-<style scoped>
-
+<style scoped lang="scss">
+table {
+  width: 1000px;
+  border: none;
+  margin: 0 auto 20px;
+  thead {
+    th {
+      font-weight: bold;
+      border: none;
+      padding: 10px 15px;
+      background: #d8d8d8;
+      font-size: 14px;
+      border-left: 1px solid #ddd;
+      border-right: 1px solid #ddd;
+      text-align: center;
+    }
+  }
+  tbody {
+    tr:nth-child(even){
+      background: #f3f3f3;
+    }
+    td {
+      border-left: 1px solid #ddd;
+      border-right: 1px solid #ddd;
+      padding: 10px 15px;
+      font-size: 14px;
+      vertical-align: top;
+      text-align: center;
+    }
+  }
+  thead tr th:first-child, .table tbody tr td:first-child {
+    border-left: none;
+  }
+  thead tr th:last-child, .table tbody tr td:last-child {
+    border-right: none;
+  }
+}
 </style>
