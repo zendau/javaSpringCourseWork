@@ -5,6 +5,7 @@ import Sales from "../views/Sales";
 import Item from "../views/Item";
 import RegisterItem from "../views/RegisterItem";
 import AddItem from "../views/AddItem";
+import BookedItems from "../views/BookedItems";
 
 const routes = [
   {
@@ -44,6 +45,11 @@ const routes = [
     path: '/item/:id',
     name: 'Item',
     component: Item,
+  },
+  {
+    path: '/BookedItems',
+    name: 'BookedItems',
+    component: BookedItems,
   },
 ]
 

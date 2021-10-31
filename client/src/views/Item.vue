@@ -4,19 +4,30 @@
     <small>{{itemData[1]}}</small>
     <img :src="'/img/'+itemData[2]" alt="Изображение товара">
     <p>{{itemData[3]}}</p>
-    <p>{{new Intl.NumberFormat('ru-RU', { style: 'currency', currency: 'RUB' }).format(itemData[4])}}</p>
-    <a href="#">Купить</a>
+    <p>{{getCurrency}}</p>
+    <button @click="buyItem = true">Купить</button>
+    <BuyItem v-if="buyItem" @closeModal="buyItem = false" :currency="getCurrency" />
   </div>
 </template>
 
 <script>
 import $api from "../axios";
+import BuyItem from "../components/BuyItem";
 
 export default {
   name: "Item",
+  components: {
+    BuyItem
+  },
   data() {
     return {
-      itemData: []
+      itemData: [],
+      buyItem: false
+    }
+  },
+  computed: {
+    getCurrency() {
+      return new Intl.NumberFormat('ru-RU', { style: 'currency', currency: 'RUB' }).format(this.itemData[4])
     }
   },
   async mounted() {

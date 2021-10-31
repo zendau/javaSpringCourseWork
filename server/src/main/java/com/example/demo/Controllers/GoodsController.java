@@ -34,6 +34,31 @@ public class GoodsController {
 
     }
 
+    @GetMapping("/couriers")
+    public ArrayList getCouriers() throws SQLException {
+
+        Statement statement = connection.createStatement();
+        String SQL = "SELECT * FROM workers w WHERE w.role LIKE \"Курьер\"";
+        ResultSet resultSet =  statement.executeQuery(SQL);
+
+        ArrayList couriers = new ArrayList<>();
+
+        ArrayList courier;
+
+        while (resultSet.next()) {
+
+            courier = new ArrayList<>();
+
+            courier.add(resultSet.getString("workerId"));
+            courier.add(resultSet.getString("name"));
+
+            couriers.add(courier);
+        }
+
+        return couriers;
+
+    }
+
     @GetMapping("/storage")
     public ArrayList getStorages() throws SQLException {
 
@@ -109,8 +134,34 @@ public class GoodsController {
 
         return item;
 
+    }
+
+    @GetMapping("/BookedItems")
+    public ArrayList getBookedItems() throws SQLException  {
+        Statement statement = connection.createStatement();
+        String SQL = "SELECT s.*, g.name FROM sales s INNER JOIN goods g ON s.itemId = g.id WHERE s.courier IS NULL";
+        ResultSet resultSet =  statement.executeQuery(SQL);
 
 
+        ArrayList items = new ArrayList<>();
+        ArrayList item;
+
+
+        while (resultSet.next()) {
+
+            item = new ArrayList<>();
+
+            item.add(resultSet.getString("id"));
+            item.add(resultSet.getString("itemId"));
+            item.add(resultSet.getString("name"));
+            item.add(resultSet.getString("dateOfSale"));
+            item.add(resultSet.getString("mailOfBuyer"));
+            item.add(resultSet.getString("count"));
+
+            items.add(item);
+        }
+
+        return items;
     }
 
 }

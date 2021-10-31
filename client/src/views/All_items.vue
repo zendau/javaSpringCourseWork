@@ -1,6 +1,10 @@
 <template>
+  <select v-model="categoryId">
+    <option value="all">Все категории</option>
+    <option v-for="item in categories" :key="item">{{item}}</option>
+  </select>
   <div class="container">
-    <div class="item" v-for="item in items" :key="item[0]">
+    <div class="item" v-for="item in filterCategory" :key="item[0]">
       <h2>{{item[1]}}</h2>
       <small>{{item[2]}}</small>
       <img :src="'/img/'+item[3]" alt="Изображение товара">
@@ -16,20 +20,32 @@
   export default {
     data() {
       return {
-        items: []
+        items: [],
+        filterItems: [],
+        categories: [],
+        categoryId: "all"
       }
     },
     methods: {
-      getImgUrl(pet) {
-        const images = require.context('../assets/', false, /\.png$/)
-        return images('./' + pet + ".png")
+    },
+    computed: {
+      filterCategory: function () {
+
+        if (this.categoryId === "all") {
+          return this.items
+        } else {
+          return this.items.filter(item => item[2] === this.categoryId)
+        }
       }
     },
     async mounted() {
+
+      const resCategories = await $api.get("/goods/category")
+      this.categories = resCategories.data
+
       const resStorage = await $api.get("/goods/all")
       this.items = resStorage.data
 
-      console.log(this.items)
     }
   }
 
@@ -46,7 +62,7 @@
 
     .item {
       width: 300px;
-      box-shadow: 0px 0px 10px 0px rgba(34, 60, 80, 0.2);
+      box-shadow: 0 0 10px 0 rgba(34, 60, 80, 0.2);
       display: grid;
       justify-items: center;
       margin-bottom: 20px;
