@@ -7,6 +7,7 @@
       <th>Дата прибытия</th>
       <th>Дата выдачи</th>
       <th>Место на складе</th>
+      <th>Удаление записи</th>
     </tr>
     </thead>
     <tbody>
@@ -16,6 +17,9 @@
       <td><input type="date" :value="item[2]"></td>
       <td><input type="date" :value="item[3]"></td>
       <td><input type="text" :value="item[4]"></td>
+      <td>
+        <router-link :to="'/delete/stockcontrolcard/'+item[0]">Удалить</router-link>
+      </td>
     </tr>
     </tbody>
   </table>

@@ -6,6 +6,7 @@
       <th>Номер кладовщика</th>
       <th>Адрес</th>
       <th>Карточка складского учета</th>
+      <th>Удаление записи</th>
     </tr>
     </thead>
     <tbody>
@@ -23,6 +24,9 @@
           <option disabled value="" selected>Выберите карточку складского учета</option>
           <option v-for="waybill in SCCs" :key="waybill[0]">{{waybill[0]}}</option>
         </select>
+      </td>
+      <td>
+        <router-link :to="'/delete/storage/'+item[0]">Удалить</router-link>
       </td>
     </tr>
     </tbody>

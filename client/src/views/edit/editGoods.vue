@@ -8,6 +8,7 @@
       <th>Изображение</th>
       <th>Описание</th>
       <th>Склад</th>
+      <th>Удаление записи</th>
     </tr>
     </thead>
     <tbody>
@@ -27,6 +28,9 @@
           <option disabled value="" selected>Выберите склад</option>
           <option v-for="storage in storages" :key="storage">{{storage}}</option>
         </select>
+      </td>
+      <td>
+        <router-link :to="'/delete/goods/'+item[0]">Удалить</router-link>
       </td>
     </tr>
     </tbody>

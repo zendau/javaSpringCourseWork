@@ -23,6 +23,7 @@ import editSCC from "../views/edit/editSCC";
 import addWaybill from "../views/add/addWaybill";
 import addStorage from "../views/add/addStorage";
 import addSCC from "../views/add/addSCC";
+import Delete from "../views/Delete";
 
 const routes = [
   {
@@ -152,6 +153,11 @@ const routes = [
     path: '/editSCC',
     name: 'editSCC',
     component: editSCC,
+  },
+  {
+    path: "/delete/:type/:id",
+    name: "Delete",
+    component: Delete
   }
 ]
 

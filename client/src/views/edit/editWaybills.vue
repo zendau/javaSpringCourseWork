@@ -10,6 +10,7 @@
       <th>Карточка складского учета</th>
       <th>Номер накладной</th>
       <th>Номер кладовщика</th>
+      <th>Удаление записи</th>
     </tr>
     </thead>
     <tbody>
@@ -36,6 +37,9 @@
           <option disabled value="" selected>Выберите карточку складского учета</option>
           <option v-for="worker in workers" :key="worker[0]">{{worker[0]}}</option>
         </select>
+      </td>
+      <td>
+        <router-link :to="'/delete/waybill/'+item[0]">Удалить</router-link>
       </td>
     </tr>
     </tbody>

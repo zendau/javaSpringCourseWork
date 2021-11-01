@@ -6,6 +6,7 @@
       <th>Имя поставщика</th>
       <th>Номер телефона</th>
       <th>Накладная</th>
+      <th>Удаление записи</th>
     </tr>
     </thead>
     <tbody>
@@ -18,6 +19,9 @@
           <option disabled value="" selected>Выберите категорию</option>
           <option v-for="waybill in waybills" :key="waybill[0]">{{waybill[0]}}</option>
         </select>
+      </td>
+      <td>
+        <router-link :to="'/delete/providers/'+item[0]">Удалить</router-link>
       </td>
     </tr>
     </tbody>

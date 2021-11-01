@@ -9,6 +9,7 @@
       <th>Номер телефона</th>
       <th>Адрес</th>
       <th>Зарплата</th>
+      <th>Удаление записи</th>
     </tr>
     </thead>
     <tbody>
@@ -26,7 +27,9 @@
       <td><input type="text" :value="item[4]"></td>
       <td><input type="text" :value="item[5]"></td>
       <td><input type="number" :value="item[6]"></td>
-
+      <td>
+        <router-link :to="'/delete/workers/'+item[0]">Удалить</router-link>
+      </td>
     </tr>
     </tbody>
   </table>

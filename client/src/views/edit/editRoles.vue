@@ -5,6 +5,7 @@
       <th>№</th>
       <th>Роль</th>
       <th>Описание</th>
+      <th>Удаление записи</th>
     </tr>
     </thead>
     <tbody>
@@ -12,6 +13,9 @@
       <td>{{item[0]}}</td>
       <td><input type="text" :value="item[1]"></td>
       <td><input type="text" :value="item[2]"></td>
+      <td>
+        <router-link :to="'/delete/roles/'+item[0]">Удалить</router-link>
+      </td>
     </tr>
     </tbody>
   </table>
