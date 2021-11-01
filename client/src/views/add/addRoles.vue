@@ -1,7 +1,6 @@
 <template>
   <div class="hello">
-    <!--    @submit.prevent="formSubmit"-->
-    <form>
+    <form @submit.prevent="formSubmit">
       <div>
         <label for="role">Роль</label>
         <input v-model="name" id="role" type="text" placeholder="Роль">
@@ -16,30 +15,23 @@
 
 <script>
 
-//import $api from "../axios";
+import $api from "../../axios";
 
 export default {
   data() {
     return {
       name: "",
-      itemCategory: "",
-      image: "",
       desk: "",
-      storageId: ""
     }
   },
   methods: {
-    // formSubmit() {
-    //   $api.post("/goods/add", {
-    //     name: this.name,
-    //     category: this.itemCategory,
-    //     image: this.image,
-    //     description: this.desk,
-    //     storageId: this.storageId
-    //   })
-    //
-    //   console.log(this.name, this.itemCategory, this.image, this.desk, this.storageId)
-    // }
+    formSubmit() {
+      $api.post("/goods/addRoles", {
+        role: this.name,
+        description: this.desk,
+      })
+
+    }
   },
   mounted() {
   }

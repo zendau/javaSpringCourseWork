@@ -1,13 +1,10 @@
 <template>
   <div class="hello">
-<!--    @submit.prevent="formSubmit"-->
-    <form>
+    <form @submit.prevent="formSubmit">
       <div>
         <label for="name">Название Категории</label>
         <input v-model="name" id="name" type="text" placeholder="Название товара">
       </div>
-
-
       <textarea v-model="desk" placeholder="Описание" id="desk" cols="30" rows="10"></textarea>
       <input type="submit" value="Добавить">
     </form>
@@ -17,32 +14,23 @@
 
 <script>
 
-//import $api from "../axios";
+import $api from "../../axios";
 
 export default {
   data() {
     return {
       name: "",
-      itemCategory: "",
-      image: "",
       desk: "",
-      storageId: ""
     }
   },
   methods: {
-    // formSubmit() {
-    //   $api.post("/goods/add", {
-    //     name: this.name,
-    //     category: this.itemCategory,
-    //     image: this.image,
-    //     description: this.desk,
-    //     storageId: this.storageId
-    //   })
-    //
-    //   console.log(this.name, this.itemCategory, this.image, this.desk, this.storageId)
-    // }
-  },
-  mounted() {
+    formSubmit() {
+      $api.post("/goods/addCategories", {
+        name: this.name,
+        description: this.desk,
+      })
+    },
+
   }
 }
 </script>

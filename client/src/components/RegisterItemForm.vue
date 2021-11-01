@@ -2,52 +2,61 @@
   <div class="hello">
 
     <form @submit.prevent="formSubmit">
-      <div>
-        <label for="name">Кодовое название товара</label>
-        <input v-model="name" id="name" type="text" placeholder="Кодовое название товара">
-      </div>
+      <select v-model="name">
+        <option disabled value="" selected>Выберите наименование товара</option>
+        <option v-for="item in goods" :key="item" :value="item[0]">{{item[1]}}({{item[0]}})</option>
+      </select>
 
       <div>
         <label for="count">Количество</label>
-        <input v-model="count" id="count" type="number" placeholder="Количество">
+        <input v-model="count" id="count" type="number" placeholder="Количество" required>
       </div>
 
 
       <div>
         <label for="numberOfWaybill">Номер накладной</label>
-        <input v-model="numberOfWaybill" id="numberOfWaybill" type="text" placeholder="Номер накладной">
+        <input v-model="numberOfWaybill" id="numberOfWaybill" type="text" placeholder="Номер накладной" required>
       </div>
 
       <div>
         <label for="arrivedDate">Дата получения</label>
-        <input v-model="arrivedDate" id="arrivedDate" type="date">
+        <input v-model="arrivedDate" id="arrivedDate" type="date" required>
       </div>
 
       <div>
         <label for="place">Место на складе</label>
-        <input v-model="place" id="place" type="text" placeholder="Место на складе">
+        <input v-model="place" id="place" type="text" placeholder="Место на складе" required>
       </div>
 
       <div>
         <label for="price1">Цена при получении</label>
-        <input v-model="price1" id="price1" type="number" placeholder="Цена при получении">
+        <input v-model="price1" id="price1" type="number" placeholder="Цена при получении" required>
       </div>
 
 
       <div>
         <label for="price2">Цена для продажи</label>
-        <input v-model="price2" id="price2" type="number" placeholder="Цена для продажи">
+        <input v-model="price2" id="price2" type="number" placeholder="Цена для продажи" required>
       </div>
 
+      <div>
+        <label for="address">Адрес склада</label>
+        <input v-model="address"  id="address" type="text" placeholder="Адрес склада" required>
+      </div>
+
+      <div>
+        <label for="providerName">Имя поставщика</label>
+        <input v-model="providerName"  id="providerName" type="text" placeholder="Имя поставщика" required>
+      </div>
+
+      <div>
+        <label for="providerPhone">Номер поставщика</label>
+        <input v-model="providerPhone"  id="providerPhone" type="text" placeholder="Номер поставщика" required>
+      </div>
 
       <select v-model="worker">
         <option disabled value="" selected>Выберите получателя товара</option>
-        <option v-for="item in workers" :key="item">{{item}}</option>
-      </select>
-
-      <select v-model="provider">
-        <option disabled value="" selected>Выберите поставшика товара</option>
-        <option v-for="item in providers" :key="item">{{item}}</option>
+        <option v-for="item in workers" :key="item" :value="item[0]">{{item[1]}}({{item[0]}})</option>
       </select>
 
       <input type="submit" value="Зарегестрировать товар">
@@ -73,27 +82,38 @@
        price1: 0,
        price2: 0,
        workers: [],
-       providers: [],
        worker: "",
-       provider: ""
+       providerName: "",
+       providerPhone: "",
+       goods: [],
+       address: ""
      }
    },
    methods: {
     formSubmit() {
-      $api.post("/goods/add", {
-        name: this.name,
-        category: this.itemCategory,
-        image: this.image,
-        description: this.desk,
-        storageId: this.storageId
+      $api.post("/goods/register", {
+        name: parseInt(this.name),
+        count: this.count,
+        numberOfWaybill: this.numberOfWaybill,
+        arrivedDate: this.arrivedDate,
+        place: this.place,
+        price1: this.price1,
+        price2: this.price2,
+        worker: this.worker,
+        address: this.address,
+        providerName: this.providerName,
+        providerPhone: this.providerPhone,
       })
-
-      console.log(this.name, this.itemCategory, this.image, this.desk, this.storageId)
     }
    },
    props: ["storage", "category"],
-   mounted() {
-     console.log(this.storage, this.category)
+   async mounted() {
+     const resWorkers = await $api.get("/goods/workers")
+
+     this.workers = resWorkers.data.filter(item => item[2] === "Кладовщик")
+
+     const resGoods = await $api.get("/goods/items")
+     this.goods = resGoods.data
    }
  }
 </script>
@@ -138,13 +158,20 @@
     max-width: 800px;
   }
 
-  div:nth-child(1) {
+  select:nth-child(1) {
     grid-column: 1/3;
+    width: 100%;
+    margin-bottom: 10px;
 
   }
 
   #name {
     width: 560px;
+  }
+
+  .address {
+    grid-column: 1/3;
+    justify-content: center;
   }
 
   input[type="submit"] {

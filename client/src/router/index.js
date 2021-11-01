@@ -9,7 +9,6 @@ import BookedItems from "../views/BookedItems";
 import Edit from "../views/Edit";
 import Add from "../views/Add";
 import addCategories from "../views/add/addCategories";
-import addProviders from "../views/add/addProviders";
 import addRoles from "../views/add/addRoles";
 import addWorkers from "../views/add/addWorkers";
 import editCategories from "../views/edit/editCategories";
@@ -20,9 +19,6 @@ import editWorkers from "../views/edit/editWorkers";
 import editWaybills from "../views/edit/editWaybills";
 import editStorage from "../views/edit/editStorage";
 import editSCC from "../views/edit/editSCC";
-import addWaybill from "../views/add/addWaybill";
-import addStorage from "../views/add/addStorage";
-import addSCC from "../views/add/addSCC";
 import Delete from "../views/Delete";
 
 const routes = [
@@ -85,11 +81,6 @@ const routes = [
     component: addCategories,
   },
   {
-    path: '/addProviders',
-    name: 'addProviders',
-    component: addProviders,
-  },
-  {
     path: '/addRoles',
     name: 'addRoles',
     component: addRoles,
@@ -98,21 +89,6 @@ const routes = [
     path: '/addWorkers',
     name: 'addWorkers',
     component: addWorkers,
-  },
-  {
-    path: '/addWaybills',
-    name: 'addWaybills',
-    component: addWaybill,
-  },
-  {
-    path: '/addStorage',
-    name: 'addStorage',
-    component: addStorage,
-  },
-  {
-    path: '/addSCC',
-    name: 'addSCC',
-    component: addSCC,
   },
   {
     path: '/editCategories',

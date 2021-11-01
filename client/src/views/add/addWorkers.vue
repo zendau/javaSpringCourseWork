@@ -1,30 +1,29 @@
 <template>
   <div class="hello">
-    <!--    @submit.prevent="formSubmit"-->
-    <form>
+    <form @submit.prevent="formSubmit">
       <div>
         <label for="name">Имя работника</label>
-        <input id="name" type="text" placeholder="Имя работника">
+        <input id="name" type="text" placeholder="Имя работника" v-model="name">
       </div>
-      <select name="" id="">
+      <select name="" id="" v-model="role">
         <option disabled value="" selected>Выберите роль работника</option>
-        <option v-for="role in roles" :key="role[0]">{{role[0]}}</option>
+        <option v-for="item in roles" :value="item[1]" :key="item[0]">{{item[1]}}</option>
       </select>
       <div>
         <label for="birthday">День рождения</label>
-        <input id="birthday" type="date" placeholder="День рождения">
+        <input id="birthday" v-model="birthday" type="date" placeholder="День рождения">
       </div>
       <div>
-        <label for="price">Номер телефона</label>
-        <input id="price" type="number" placeholder="Номер телефона">
+        <label for="phone">Номер телефона</label>
+        <input id="phone" type="text" v-model="phone" placeholder="Номер телефона">
       </div>
       <div>
         <label for="address">Адрес</label>
-        <input id="address" type="text" placeholder="Адрес">
+        <input id="address" v-model="address" type="text" placeholder="Адрес">
       </div>
       <div>
         <label for="salary">Зарплата</label>
-        <input id="salary" type="number" placeholder="Зарплата">
+        <input id="salary" v-model="salary" type="number" placeholder="Зарплата">
       </div>
       <input type="submit" value="Добавить">
     </form>
@@ -34,36 +33,38 @@
 
 <script>
 
-//import $api from "../axios";
 
 import $api from "../../axios";
 
 export default {
   data() {
     return {
-      roles: []
+      roles: [],
+      name: "",
+      role: "",
+      birthday: "",
+      phone: "",
+      address: "",
+      salary: 0
     }
   },
   methods: {
-    // formSubmit() {
-    //   $api.post("/goods/add", {
-    //     name: this.name,
-    //     category: this.itemCategory,
-    //     image: this.image,
-    //     description: this.desk,
-    //     storageId: this.storageId
-    //   })
-    //
-    //   console.log(this.name, this.itemCategory, this.image, this.desk, this.storageId)
-    // }
+    formSubmit() {
+      $api.post("/goods/addWorkers", {
+        salary: this.salary,
+        workerName: this.name,
+        birthday: this.birthday,
+        address: this.address,
+        role: this.role,
+        phone: this.phone
+      })
+    }
   },
   async mounted() {
-
-
     const resRoles = await $api.get("/goods/roles")
     this.roles = resRoles.data
 
-
+    console.log(this.roles)
   }
 }
 </script>
