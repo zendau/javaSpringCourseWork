@@ -5,6 +5,8 @@ import org.springframework.web.bind.annotation.*;
 
 import java.sql.*;
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
+
 
 @RestController
 @RequestMapping("/goods")
@@ -506,6 +508,210 @@ public class GoodsController {
         result = preparedStatement.executeUpdate();
 
         return result;
+    }
+
+    @PutMapping("/editGoods")
+    public void editGoods(@RequestBody LinkedHashMap param) throws SQLException {
+
+        ArrayList<ArrayList> values = (ArrayList) param.get("param");
+
+        for (int i = 0; i < values.size(); i++) {
+
+            ArrayList data = values.get(i);
+
+            String SQL = "UPDATE goods SET name = ?, category = ? , image = ?, description = ? WHERE id = ?";
+
+            PreparedStatement preparedStatement = connection.prepareStatement(SQL);
+            preparedStatement.setString(1, (String) data.get(1));
+            preparedStatement.setString(2, (String) data.get(2));
+            preparedStatement.setString(3, (String) data.get(3));
+            preparedStatement.setString(4, (String) data.get(4));
+            preparedStatement.setInt(5, Integer.parseInt((String) data.get(0)));
+            preparedStatement.executeUpdate();
+
+        }
+    }
+
+    @PutMapping("/editProviders")
+    public void editProviders(@RequestBody LinkedHashMap param) throws SQLException {
+
+        ArrayList<ArrayList> values = (ArrayList) param.get("param");
+
+        for (int i = 0; i < values.size(); i++) {
+
+            ArrayList data = values.get(i);
+
+            String SQL = "UPDATE providers SET name = ?,  phone = ?, waybillId = ? WHERE providerId = ?";
+
+            PreparedStatement preparedStatement = connection.prepareStatement(SQL);
+            preparedStatement.setString(1, (String) data.get(1));
+            preparedStatement.setString(2, (String) data.get(2));
+            preparedStatement.setInt(3, Integer.parseInt((String) data.get(3)));
+            preparedStatement.setInt(4, Integer.parseInt((String) data.get(0)));
+            preparedStatement.executeUpdate();
+
+        }
+    }
+
+    @PutMapping("/editWorkers")
+    public void editWorkers(@RequestBody LinkedHashMap param) throws SQLException {
+
+        ArrayList<ArrayList> values = (ArrayList) param.get("param");
+
+        for (int i = 0; i < values.size(); i++) {
+
+            ArrayList data = values.get(i);
+
+            String SQL = "UPDATE workers SET name = ?, role = ?, birthday = ?, phone = ?, address = ?, salary = ? WHERE workerId = ?";
+
+            PreparedStatement preparedStatement = connection.prepareStatement(SQL);
+            preparedStatement.setString(1, (String) data.get(1));
+            preparedStatement.setString(2, (String) data.get(2));
+            preparedStatement.setString(3, (String) data.get(3));
+            preparedStatement.setString(4, (String) data.get(4));
+            preparedStatement.setString(5, (String) data.get(5));
+
+            if (data.get(6) instanceof Integer) {
+                preparedStatement.setInt(6, (Integer) data.get(6));
+            } else {
+                preparedStatement.setInt(6, Integer.parseInt((String) data.get(6)));
+            }
+
+            preparedStatement.setInt(7, Integer.parseInt((String) data.get(0)));
+            preparedStatement.executeUpdate();
+
+        }
+    }
+
+    @PutMapping("/editCategories")
+    public void editCategories(@RequestBody LinkedHashMap param) throws SQLException {
+
+        ArrayList<ArrayList> values = (ArrayList) param.get("param");
+
+        for (int i = 0; i < values.size(); i++) {
+
+            ArrayList data = values.get(i);
+
+            String SQL = "UPDATE categories SET name = ?, description = ? WHERE id = ?";
+
+            PreparedStatement preparedStatement = connection.prepareStatement(SQL);
+            preparedStatement.setString(1, (String) data.get(1));
+            preparedStatement.setString(2, (String) data.get(2));
+            preparedStatement.setInt(3, Integer.parseInt((String) data.get(0)));
+            preparedStatement.executeUpdate();
+
+        }
+    }
+
+    @PutMapping("/editSCC")
+    public void editSCC(@RequestBody LinkedHashMap param) throws SQLException {
+
+        ArrayList<ArrayList> values = (ArrayList) param.get("param");
+
+        for (int i = 0; i < values.size(); i++) {
+
+            ArrayList data = values.get(i);
+
+            String SQL = "UPDATE stockcontrolcard SET price = ?, arrivadDate = ?, issueDate = ?, place = ? WHERE id = ?";
+
+            PreparedStatement preparedStatement = connection.prepareStatement(SQL);
+
+            if (data.get(1) instanceof Integer) {
+                preparedStatement.setInt(1, (Integer) data.get(1));
+            } else {
+                preparedStatement.setInt(1, Integer.parseInt((String) data.get(1)));
+            }
+
+            preparedStatement.setString(2, (String) data.get(2));
+            preparedStatement.setString(3, (String) data.get(3));
+            preparedStatement.setString(4, (String) data.get(4));
+            preparedStatement.setInt(5, Integer.parseInt((String) data.get(0)));
+            preparedStatement.executeUpdate();
+
+        }
+    }
+
+    @PutMapping("/editRoles")
+    public void editRoles(@RequestBody LinkedHashMap param) throws SQLException {
+
+        ArrayList<ArrayList> values = (ArrayList) param.get("param");
+
+        for (int i = 0; i < values.size(); i++) {
+
+            ArrayList data = values.get(i);
+
+            String SQL = "UPDATE roles SET role = ?, description = ? WHERE id = ?";
+
+            PreparedStatement preparedStatement = connection.prepareStatement(SQL);
+            preparedStatement.setString(1, (String) data.get(1));
+            preparedStatement.setString(2, (String) data.get(2));
+            preparedStatement.setInt(3, Integer.parseInt((String) data.get(0)));
+            preparedStatement.executeUpdate();
+
+        }
+    }
+
+
+    @PutMapping("/editStorage")
+    public void editStorage(@RequestBody LinkedHashMap param) throws SQLException {
+
+        ArrayList<ArrayList> values = (ArrayList) param.get("param");
+
+        for (int i = 0; i < values.size(); i++) {
+
+            ArrayList data = values.get(i);
+
+            String SQL = "UPDATE storage SET workerId = ?, address = ?, SccId = ? WHERE id = ?";
+
+            PreparedStatement preparedStatement = connection.prepareStatement(SQL);
+            preparedStatement.setInt(1, Integer.parseInt((String) data.get(1)));
+            preparedStatement.setString(2, (String) data.get(2));
+            preparedStatement.setInt(3, Integer.parseInt((String) data.get(3)));
+            preparedStatement.setInt(4, Integer.parseInt((String) data.get(0)));
+            preparedStatement.executeUpdate();
+
+        }
+    }
+
+    @PutMapping("/editWaybills")
+    public void editWaybills(@RequestBody LinkedHashMap param) throws SQLException {
+
+        ArrayList<ArrayList> values = (ArrayList) param.get("param");
+
+        for (int i = 0; i < values.size(); i++) {
+
+            ArrayList data = values.get(i);
+
+            String SQL = "UPDATE waybill SET createdDate = ?, itemId = ?, count = ?, price = ?, SccId = ?, waybillName = ?, recipientId = ? WHERE id = ?";
+
+            PreparedStatement preparedStatement = connection.prepareStatement(SQL);
+            preparedStatement.setString(1, (String) data.get(1));
+            preparedStatement.setInt(2, Integer.parseInt((String) data.get(2)));
+
+            if (data.get(3) instanceof Integer) {
+                preparedStatement.setInt(3, (Integer) data.get(3));
+            } else {
+                preparedStatement.setInt(3, Integer.parseInt((String) data.get(3)));
+            }
+
+            if (data.get(4) instanceof Integer) {
+                preparedStatement.setInt(4, (Integer) data.get(4));
+            } else {
+                preparedStatement.setInt(4, Integer.parseInt((String) data.get(4)));
+            }
+
+            preparedStatement.setInt(5, Integer.parseInt((String) data.get(5)));
+            preparedStatement.setString(6, (String) data.get(6));
+
+            if (data.get(7) instanceof Integer) {
+                preparedStatement.setInt(7, (Integer) data.get(7));
+            } else {
+                preparedStatement.setInt(7, Integer.parseInt((String) data.get(7)));
+            }
+            preparedStatement.setInt(8, Integer.parseInt((String) data.get(0)));
+            preparedStatement.executeUpdate();
+
+        }
     }
 
 }

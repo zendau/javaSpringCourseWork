@@ -14,15 +14,15 @@
     <tbody>
     <tr v-for="item in goods" :key="item[0]">
       <td>{{item[0]}}</td>
-      <td><input type="text" :value="item[1]"></td>
+      <td><input type="text" v-model="item[1]"></td>
       <td>
         <select name="" id="" v-model="item[2]">
           <option disabled value="" selected>Выберите категорию</option>
           <option v-for="category in categories" :key="category">{{category}}</option>
         </select>
       </td>
-      <td><input type="text" :value="item[3]"></td>
-      <td><input type="text" :value="item[4]"></td>
+      <td><input type="text" v-model="item[3]"></td>
+      <td><input type="text" v-model="item[4]"></td>
       <td>
         <select name="" id="" v-model="item[5]">
           <option disabled value="" selected>Выберите склад</option>
@@ -35,7 +35,7 @@
     </tr>
     </tbody>
   </table>
-  <button>Сохранить</button>
+  <button @click="editData">Сохранить</button>
 </template>
 
 <script>
@@ -48,6 +48,16 @@ export default {
       storages: [],
       categories: [],
       goods: []
+    }
+  },
+  methods: {
+    editData() {
+
+      $api.put("/goods/editGoods", {
+        param: this.goods
+      })
+
+      console.log(JSON.stringify({...this.goods}))
     }
   },
   async mounted() {

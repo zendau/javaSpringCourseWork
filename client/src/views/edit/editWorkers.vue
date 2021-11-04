@@ -15,25 +15,25 @@
     <tbody>
     <tr v-for="item in workers" :key="item[0]">
       <td>{{item[0]}}</td>
-      <td><input type="text" :value="item[1]"></td>
+      <td><input type="text" v-model="item[1]"></td>
       <td>
-        <select name="" id="" v-model="item[2]">
-          <option disabled value="" selected>Выберите категорию</option>
+        <select v-model="item[2]">
+          <option disabled  selected>Выберите категорию</option>
           <option v-for="role in roles" :key="role[1]">{{role[1]}}</option>
         </select>
       </td>
 
-      <td><input type="date" :value="item[3]"></td>
-      <td><input type="text" :value="item[4]"></td>
-      <td><input type="text" :value="item[5]"></td>
-      <td><input type="number" :value="item[6]"></td>
+      <td><input type="date" v-model="item[3]"></td>
+      <td><input type="text" v-model="item[4]"></td>
+      <td><input type="text" v-model="item[5]"></td>
+      <td><input type="number" v-model="item[6]"></td>
       <td>
         <router-link :to="'/delete/workers/'+item[0]">Удалить</router-link>
       </td>
     </tr>
     </tbody>
   </table>
-  <button>Сохранить</button>
+  <button @click="editData">Сохранить</button>
 </template>
 
 <script>
@@ -45,6 +45,15 @@ export default {
     return {
       roles: [],
       workers: []
+    }
+  },
+  methods: {
+    editData() {
+
+      $api.put("/goods/editWorkers", {
+        param: this.workers
+      })
+
     }
   },
   async mounted() {

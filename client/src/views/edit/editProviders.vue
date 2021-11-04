@@ -12,10 +12,10 @@
     <tbody>
     <tr v-for="item in providers" :key="item[0]">
       <td>{{item[0]}}</td>
-      <td><input type="text" :value="item[1]"></td>
-      <td><input type="text" :value="item[2]"></td>
+      <td><input type="text" v-model="item[1]"></td>
+      <td><input type="text" v-model="item[2]"></td>
       <td>
-        <select name="" id="" v-model="item[3]">
+        <select v-model="item[3]">
           <option disabled value="" selected>Выберите категорию</option>
           <option v-for="waybill in waybills" :key="waybill[0]">{{waybill[0]}}</option>
         </select>
@@ -26,7 +26,7 @@
     </tr>
     </tbody>
   </table>
-  <button>Сохранить</button>
+  <button @click="editData">Сохранить</button>
 </template>
 
 <script>
@@ -38,6 +38,15 @@ export default {
     return {
       providers: [],
       waybills: []
+    }
+  },
+  methods: {
+    editData() {
+
+      $api.put("/goods/editProviders", {
+        param: this.providers
+      })
+
     }
   },
   async mounted() {

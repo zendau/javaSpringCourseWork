@@ -11,8 +11,8 @@
     <tbody>
     <tr v-for="item in categories" :key="item[0]">
       <td>{{item[0]}}</td>
-      <td><input type="text" :value="item[1]"></td>
-      <td><input type="text" :value="item[2]"></td>
+      <td><input type="text" v-model="item[1]"></td>
+      <td><input type="text" v-model="item[2]"></td>
       <td>
         <router-link :to="'/delete/categories/'+item[0]">Удалить</router-link>
       </td>
@@ -20,7 +20,7 @@
 
     </tbody>
   </table>
-  <button>Сохранить</button>
+  <button @click="editData">Сохранить</button>
 </template>
 
 <script>
@@ -31,6 +31,15 @@ export default {
   data() {
     return {
       categories: [],
+    }
+  },
+  methods: {
+    editData() {
+
+      $api.put("/goods/editCategories", {
+        param: this.categories
+      })
+
     }
   },
   async mounted() {

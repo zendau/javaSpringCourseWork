@@ -18,7 +18,7 @@
           <option v-for="worker in workers" :key="worker[0]">{{worker[0]}}</option>
         </select>
       </td>
-      <td><input type="text" :value="item[2]"></td>
+      <td><input type="text" v-model="item[2]"></td>
       <td>
         <select name="" id="" v-model="item[3]">
           <option disabled value="" selected>Выберите карточку складского учета</option>
@@ -31,7 +31,7 @@
     </tr>
     </tbody>
   </table>
-  <button>Сохранить</button>
+  <button @click="editData">Сохранить</button>
 </template>
 
 <script>
@@ -44,6 +44,15 @@ export default {
       storages: [],
       workers: [],
       SCCs: []
+    }
+  },
+  methods: {
+    editData() {
+
+      $api.put("/goods/editStorage", {
+        param: this.storages
+      })
+
     }
   },
   async mounted() {
