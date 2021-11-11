@@ -23,12 +23,16 @@ export default {
       desk: "",
     }
   },
+  inject: ['update'],
   methods: {
-    formSubmit() {
-      $api.post("/goods/addCategories", {
+    async formSubmit() {
+      const res = await $api.post("/goods/addCategories", {
         name: this.name,
         description: this.desk,
       })
+
+      this.update(true, res.data.errorCode)
+
     },
 
   }

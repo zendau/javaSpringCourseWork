@@ -1,13 +1,14 @@
 <template>
   <div>
-    <p>Type - {{type}}</p>
-    <p>id - {{id}}</p>
+    <ConfirmDelete/>
   </div>
 </template>
 
 <script>
+import ConfirmDelete from "../components/confirmDelete";
 export default {
   name: "Delete",
+  components: {ConfirmDelete},
   data() {
     return {
       type: "",

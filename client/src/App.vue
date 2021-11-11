@@ -9,6 +9,7 @@
     <router-link to="/reference">Справочные таблицы</router-link>
   </div>
   <router-view/>
+  <error-message :error-code="errorCode" :status="errorStatus"  />
 </template>
 
 <style lang="scss">
@@ -33,3 +34,34 @@
   }
 }
 </style>
+<script>
+import ErrorMessage from "./components/errorMessage";
+export default {
+  components: {ErrorMessage},
+  data() {
+    return {
+      errorStatus: false,
+      errorCode: 0,
+    }
+  },
+  provide() {
+    return {
+      update: this.updateError
+    }
+  },
+  methods: {
+    updateError(newStatus, code) {
+
+      console.log(newStatus)
+
+      this.errorStatus = newStatus
+      this.errorCode = code
+    }
+  },
+  watch: {
+    errorStatus: function(val) {
+      console.log("1",val)
+    }
+  }
+}
+</script>

@@ -24,12 +24,15 @@ export default {
       desk: "",
     }
   },
+  inject: ['update'],
   methods: {
-    formSubmit() {
-      $api.post("/goods/addRoles", {
+    async formSubmit() {
+      const res = await $api.post("/goods/addRoles", {
         role: this.name,
         description: this.desk,
       })
+
+      this.update(true, res.data.errorCode)
 
     }
   },

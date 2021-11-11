@@ -332,29 +332,38 @@ public class GoodsController {
     }
 
     @PostMapping("/addCategories")
-    public int addCategories(@RequestBody Categories newItem) throws SQLException {
+    public Object addCategories(@RequestBody Categories newItem) {
 
         String SQL = "INSERT INTO categories (name, description) VALUE (?, ?)";
 
-        PreparedStatement preparedStatement = connection.prepareStatement(SQL);
-        preparedStatement.setString(1, newItem.getName());
-        preparedStatement.setString(2, newItem.getDescription());
+        try {
+            PreparedStatement preparedStatement = connection.prepareStatement(SQL);
+            preparedStatement.setString(1, newItem.getName());
+            preparedStatement.setString(2, newItem.getDescription());
 
-        int result = preparedStatement.executeUpdate();
-        return result;
+            int result = preparedStatement.executeUpdate();
+            return result;
+        } catch (SQLException e) {
+            return e;
+        }
     }
 
     @PostMapping("/addRoles")
-    public int addRoles(@RequestBody Roles newItem) throws SQLException {
+    public Object addRoles(@RequestBody Roles newItem) {
 
         String SQL = "INSERT INTO roles (role, description) VALUE (?, ?)";
 
-        PreparedStatement preparedStatement = connection.prepareStatement(SQL);
-        preparedStatement.setString(1, newItem.getRole());
-        preparedStatement.setString(2, newItem.getDescription());
+        try {
 
-        int result = preparedStatement.executeUpdate();
-        return result;
+            PreparedStatement preparedStatement = connection.prepareStatement(SQL);
+            preparedStatement.setString(1, newItem.getRole());
+            preparedStatement.setString(2, newItem.getDescription());
+
+            int result = preparedStatement.executeUpdate();
+            return result;
+        } catch (SQLException e) {
+            return e;
+        }
     }
 
     @GetMapping("/all")
@@ -584,22 +593,27 @@ public class GoodsController {
     }
 
     @PutMapping("/editCategories")
-    public void editCategories(@RequestBody LinkedHashMap param) throws SQLException {
+    public SQLException editCategories(@RequestBody LinkedHashMap param) {
 
         ArrayList<ArrayList> values = (ArrayList) param.get("param");
 
-        for (int i = 0; i < values.size(); i++) {
+        try {
+            for (int i = 0; i < values.size(); i++) {
 
-            ArrayList data = values.get(i);
+                ArrayList data = values.get(i);
 
-            String SQL = "UPDATE categories SET name = ?, description = ? WHERE id = ?";
+                String SQL = "UPDATE categories SET name = ?, description = ? WHERE id = ?";
 
-            PreparedStatement preparedStatement = connection.prepareStatement(SQL);
-            preparedStatement.setString(1, (String) data.get(1));
-            preparedStatement.setString(2, (String) data.get(2));
-            preparedStatement.setInt(3, Integer.parseInt((String) data.get(0)));
-            preparedStatement.executeUpdate();
+                PreparedStatement preparedStatement = connection.prepareStatement(SQL);
+                preparedStatement.setString(1, (String) data.get(1));
+                preparedStatement.setString(2, (String) data.get(2));
+                preparedStatement.setInt(3, Integer.parseInt((String) data.get(0)));
+                preparedStatement.executeUpdate();
 
+            }
+            return null;
+        } catch (SQLException e) {
+            return e;
         }
     }
 
@@ -632,23 +646,29 @@ public class GoodsController {
     }
 
     @PutMapping("/editRoles")
-    public void editRoles(@RequestBody LinkedHashMap param) throws SQLException {
+    public SQLException editRoles(@RequestBody LinkedHashMap param) throws SQLException {
 
         ArrayList<ArrayList> values = (ArrayList) param.get("param");
 
-        for (int i = 0; i < values.size(); i++) {
+        try {
+            for (int i = 0; i < values.size(); i++) {
 
-            ArrayList data = values.get(i);
+                ArrayList data = values.get(i);
 
-            String SQL = "UPDATE roles SET role = ?, description = ? WHERE id = ?";
+                String SQL = "UPDATE roles SET role = ?, description = ? WHERE id = ?";
 
-            PreparedStatement preparedStatement = connection.prepareStatement(SQL);
-            preparedStatement.setString(1, (String) data.get(1));
-            preparedStatement.setString(2, (String) data.get(2));
-            preparedStatement.setInt(3, Integer.parseInt((String) data.get(0)));
-            preparedStatement.executeUpdate();
+                PreparedStatement preparedStatement = connection.prepareStatement(SQL);
+                preparedStatement.setString(1, (String) data.get(1));
+                preparedStatement.setString(2, (String) data.get(2));
+                preparedStatement.setInt(3, Integer.parseInt((String) data.get(0)));
+                preparedStatement.executeUpdate();
 
+            }
+        } catch (SQLException e) {
+            return e;
         }
+
+        return null;
     }
 
 
@@ -712,6 +732,20 @@ public class GoodsController {
             preparedStatement.executeUpdate();
 
         }
+    }
+
+
+    @DeleteMapping("/delete")
+    public void deleteValue(@RequestBody Delete deleteItem) throws SQLException {
+
+
+        Statement statement = connection.createStatement();
+        String SQL = "DELETE FROM "+deleteItem.getType()+" WHERE id = "+deleteItem.getId();
+        statement.executeUpdate(SQL);
+
+
+        System.out.println(deleteItem.getId() + " " + deleteItem.getType());
+
     }
 
 }

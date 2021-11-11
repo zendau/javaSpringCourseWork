@@ -32,12 +32,15 @@ export default {
       roles: []
     }
   },
+  inject: ['update'],
   methods: {
-    editData() {
+    async editData() {
 
-      $api.put("/goods/editRoles", {
+      const res = await $api.put("/goods/editRoles", {
         param: this.roles
       })
+
+      this.update(true, res.data.errorCode)
 
     }
   },

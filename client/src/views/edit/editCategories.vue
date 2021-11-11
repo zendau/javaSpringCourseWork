@@ -33,12 +33,15 @@ export default {
       categories: [],
     }
   },
+  inject: ['update'],
   methods: {
-    editData() {
+    async editData() {
 
-      $api.put("/goods/editCategories", {
+      const res = await $api.put("/goods/editCategories", {
         param: this.categories
       })
+
+      this.update(true, res.data.errorCode)
 
     }
   },
