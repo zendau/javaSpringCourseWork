@@ -1,12 +1,15 @@
 <template>
   <div class="container">
-    <h1>{{itemData[0]}}</h1>
-    <small>{{itemData[1]}}</small>
-    <img :src="'/img/'+itemData[2]" alt="Изображение товара">
-    <p>{{itemData[3]}}</p>
-    <p>{{getCurrency}}</p>
-    <button @click="buyItem = true">Купить</button>
-    <BuyItem v-if="buyItem" @closeModal="buyItem = false" :currency="getCurrency" />
+    <div v-if="itemData[6] > 0">
+      <h1>{{itemData[1]}}</h1>
+      <small>{{itemData[2]}}</small>
+      <img :src="'/img/'+itemData[3]" alt="Изображение товара">
+      <p>{{itemData[4]}}</p>
+      <p>{{getCurrency}}</p>
+      <button @click="buyItem = true">Купить</button>
+      <BuyItem v-if="buyItem" @closeModal="buyItem = false" :item-id="itemData[0]" :count="itemData[6]" :currency="itemData[5]" />
+    </div>
+    <p v-else>Данного товара нет в наличии</p>
   </div>
 </template>
 
@@ -27,8 +30,8 @@ export default {
   },
   computed: {
     getCurrency() {
-      return new Intl.NumberFormat('ru-RU', { style: 'currency', currency: 'RUB' }).format(this.itemData[4])
-    }
+      return new Intl.NumberFormat('ru-RU', { style: 'currency', currency: 'RUB' }).format(this.itemData[5])
+    },
   },
   async mounted() {
     console.log()

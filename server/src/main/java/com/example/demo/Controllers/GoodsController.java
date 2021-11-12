@@ -372,7 +372,15 @@ public class GoodsController {
 
 
         Statement statement = connection.createStatement();
-        String SQL = "SELECT g.*, s1.price FROM goods g INNER JOIN storage s ON g.storageID = s.id INNER JOIN stockcontrolcard s1 ON s.SccId = s1.id\n";
+        String SQL = "SELECT sortDate.id, sortDate.name, sortDate.category, sortDate.image, sortDate.price FROM\n" +
+                    "(SELECT \n" +
+                    "g.id, g.name, g.category, g.image, s1.arrivadDate, s1.price, s.itemId\n" +
+                    "FROM goods g \n" +
+                    "INNER JOIN storage s ON s.itemId = g.id \n" +
+                    "INNER JOIN stockcontrolcard s1 ON s.SccId = s1.id \n" +
+                    "ORDER BY s1.arrivadDate\n" +
+                    ")  AS sortDate\n" +
+                    "GROUP BY sortDate.itemId\n";
         ResultSet resultSet =  statement.executeQuery(SQL);
 
         ArrayList item ;
@@ -400,7 +408,16 @@ public class GoodsController {
     public ArrayList getOneItem(@RequestParam int id) throws SQLException {
 
         Statement statement = connection.createStatement();
-        String SQL = "SELECT g.name, g.category, g.image, g.description, s1.price FROM goods g INNER JOIN storage s ON g.storageID = s.id INNER JOIN stockcontrolcard s1 ON s.SccId = s1.id WHERE g.id = " + id;
+        String SQL = "SELECT sortDate.id, sortDate.name, sortDate.category, sortDate.image, sortDate.description, sortDate.price, COUNT(sortDate.price) as count FROM\n" +
+                        "(SELECT \n" +
+                        "g.id, g.name, g.category, g.description, g.image, s1.arrivadDate, s1.price, s.itemId\n" +
+                        "FROM goods g \n" +
+                        "INNER JOIN storage s ON s.itemId = g.id \n" +
+                        "INNER JOIN stockcontrolcard s1 ON s.SccId = s1.id \n" +
+                        "ORDER BY s1.arrivadDate\n" +
+                        ")  AS sortDate\n" +
+                        "GROUP BY sortDate.itemId\n" +
+                        "HAVING sortDate.id = " + id;
         ResultSet resultSet =  statement.executeQuery(SQL);
 
 
@@ -408,11 +425,13 @@ public class GoodsController {
 
         while (resultSet.next()) {
 
+            item.add(resultSet.getString("id"));
             item.add(resultSet.getString("name"));
             item.add(resultSet.getString("category"));
             item.add(resultSet.getString("image"));
             item.add(resultSet.getString("description"));
             item.add(resultSet.getString("price"));
+            item.add(resultSet.getString("count"));
 
         }
 
@@ -747,5 +766,27 @@ public class GoodsController {
         System.out.println(deleteItem.getId() + " " + deleteItem.getType());
 
     }
+
+    @PostMapping("/buyGoods")
+    public Object buyGoods(@RequestBody BuyGoods buyItem) {
+
+        String SQL = "INSERT INTO sales (itemId, dateOfSale, mailOfBuyer, count) VALUE (?, CURDATE(), ?, ?)";
+
+        try {
+
+            PreparedStatement preparedStatement = connection.prepareStatement(SQL);
+            preparedStatement.setInt(1, buyItem.getItemId());
+            preparedStatement.setString(2, buyItem.getMailOfBuyer());
+            preparedStatement.setInt(3, buyItem.getCount());
+
+            int result = preparedStatement.executeUpdate();
+            return result;
+        } catch (SQLException e) {
+            return e;
+        }
+    }
+
+
+
 
 }

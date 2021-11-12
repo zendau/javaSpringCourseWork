@@ -1,29 +1,52 @@
 <template>
   <div>
     <div class="overlay" @click="closeModal"></div>
-    <form class="container">
+    <form @submit.prevent="buyItem" class="container">
       <h1>Оформление покупки</h1>
       <div class="item-container">
         <label for="email">Введите ваш email</label>
-        <input id="email" required type="email" placeholder="user@gmail.com">
+        <input id="email" required type="email" v-model="email" placeholder="user@gmail.com">
       </div>
       <div class="item-container">
         <label for="count">Количество покупаемого товара</label>
-        <input id="count" required type="number" maxlength="50" minlength="1"  value="1">
+        <input id="count" required type="number" :max="count" min="1"  v-model="countOfItems">
       </div>
-      <p>Сумма к оплате - {{currency}}</p>
+      <p>Сумма к оплате - {{getCurrency}}</p>
       <button type="submit">Произвести покупку</button>
     </form>
   </div>
 </template>
 
 <script>
+import $api from "../axios";
+
 export default {
   name: "BuyItem",
-  props: ["currency"],
+  props: ["currency", "count", "itemId"],
   methods: {
     closeModal() {
       this.$emit("closeModal")
+    },
+    async buyItem() {
+
+      await $api.post("/goods/buyGoods", {
+        itemId: this.itemId,
+        mailOfBuyer: this.email,
+        count: this.countOfItems
+      })
+      this.closeModal()
+    }
+  },
+  data() {
+    return {
+      countOfItems: 1,
+      email: ""
+    }
+  },
+  computed: {
+    getCurrency() {
+      console.log(parseInt(this.currency), this.countOfItems)
+      return new Intl.NumberFormat('ru-RU', { style: 'currency', currency: 'RUB' }).format(this.currency * this.countOfItems)
     }
   }
 }
