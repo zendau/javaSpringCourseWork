@@ -20,6 +20,7 @@ import editWaybills from "../views/edit/editWaybills";
 import editStorage from "../views/edit/editStorage";
 import editSCC from "../views/edit/editSCC";
 import Delete from "../views/Delete";
+import Replenishment from "../views/Replenishment";
 
 const routes = [
   {
@@ -134,6 +135,11 @@ const routes = [
     path: "/delete/:type/:id",
     name: "Delete",
     component: Delete
+  },
+  {
+    path: "/replenishment",
+    name: "Replenishment",
+    component: Replenishment
   }
 ]
 

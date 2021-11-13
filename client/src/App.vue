@@ -2,6 +2,7 @@
   <div id="nav">
     <router-link to="/">Добавление товаров</router-link> |
     <router-link to="/addItem">Регистрация товара</router-link> |
+    <router-link to="/replenishment">Пополнение товаров</router-link> |
     <router-link to="/add">Добавление</router-link> |
     <router-link to="/edit">Редактирование</router-link> |
     <router-link to="/BookedItems">Забронированные товары</router-link> |
@@ -56,11 +57,6 @@ export default {
 
       this.errorStatus = newStatus
       this.errorCode = code
-    }
-  },
-  watch: {
-    errorStatus: function(val) {
-      console.log("1",val)
     }
   }
 }

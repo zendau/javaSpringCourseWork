@@ -3,8 +3,8 @@
     <option value="all">Все категории</option>
     <option v-for="item in categories" :key="item">{{item}}</option>
   </select>
-  <div class="container">
-    <div class="item" v-for="item in filterCategory" :key="item[0]">
+  <div class="container" v-if="filterCategory.length > 0">
+    <div  class="item" v-for="item in filterCategory" :key="item[0]">
       <h2>{{item[1]}}</h2>
       <small>{{item[2]}}</small>
       <img :src="'/img/'+item[3]" alt="Изображение товара">
@@ -12,6 +12,7 @@
       <RouterLink :to="'/item/'+item[0]">Купить</RouterLink>
     </div>
   </div>
+  <p v-else>Товаров не найдено</p>
 </template>
 
 <script>

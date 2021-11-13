@@ -378,6 +378,7 @@ public class GoodsController {
                     "FROM goods g \n" +
                     "INNER JOIN storage s ON s.itemId = g.id \n" +
                     "INNER JOIN stockcontrolcard s1 ON s.SccId = s1.id \n" +
+                    "WHERE s1.issueDate IS NULL \n"+
                     "ORDER BY s1.arrivadDate\n" +
                     ")  AS sortDate\n" +
                     "GROUP BY sortDate.itemId\n";
@@ -414,6 +415,7 @@ public class GoodsController {
                         "FROM goods g \n" +
                         "INNER JOIN storage s ON s.itemId = g.id \n" +
                         "INNER JOIN stockcontrolcard s1 ON s.SccId = s1.id \n" +
+                        "WHERE s1.issueDate IS NULL \n"+
                         "ORDER BY s1.arrivadDate\n" +
                         ")  AS sortDate\n" +
                         "GROUP BY sortDate.itemId\n" +
@@ -442,7 +444,7 @@ public class GoodsController {
     @GetMapping("/BookedItems")
     public ArrayList getBookedItems() throws SQLException  {
         Statement statement = connection.createStatement();
-        String SQL = "SELECT s.*, g.name FROM sales s INNER JOIN goods g ON s.itemId = g.id WHERE s.courier IS NULL";
+        String SQL = "SELECT s.*, g.name, storage.SccId AS SCC FROM sales s INNER JOIN goods g ON s.itemId = g.id INNER JOIN storage ON  g.id = storage.itemId WHERE s.courier IS NULL";
         ResultSet resultSet =  statement.executeQuery(SQL);
 
 
@@ -460,6 +462,7 @@ public class GoodsController {
             item.add(resultSet.getString("dateOfSale"));
             item.add(resultSet.getString("mailOfBuyer"));
             item.add(resultSet.getString("count"));
+            item.add(resultSet.getString("SCC"));
 
             items.add(item);
         }
@@ -784,6 +787,74 @@ public class GoodsController {
         } catch (SQLException e) {
             return e;
         }
+    }
+
+    @PostMapping("/saleGoods")
+    public Object saleGoods(@RequestBody SaleGoods saleGoods) throws SQLException {
+
+        String SQL = "START TRANSACTION;";
+        Statement statement = connection.createStatement();
+        statement.executeUpdate(SQL);
+
+        try {
+
+            for (int i = 0; i < saleGoods.getCount(); i++) {
+
+                SQL = "SELECT sortDate.storage, sortDate.scc FROM" +
+                        " (SELECT " +
+                        " g.id, g.name, g.category, g.description, g.image, s1.arrivadDate, s1.price, s.itemId, s.id as storage, s1.id as scc" +
+                        " FROM goods g " +
+                        " INNER JOIN storage s ON s.itemId = g.id " +
+                        " INNER JOIN stockcontrolcard s1 ON s.SccId = s1.id " +
+                        " ORDER BY s1.arrivadDate" +
+                        " )  AS sortDate" +
+                        " WHERE sortDate.id = " + saleGoods.getItemId() +
+                        " LIMIT 1;";
+
+                ResultSet resultSet =  statement.executeQuery(SQL);
+
+                String storage = "";
+                String SCC = "";
+
+                while (resultSet.next()) {
+
+                    storage = resultSet.getString("storage");
+                    SCC = resultSet.getString("scc");
+                }
+
+                if (storage.equals("") || SCC.equals("")) {
+                    return 24;
+                }
+
+                statement = connection.createStatement();
+                SQL = "DELETE FROM storage WHERE id = "+storage;
+                statement.executeUpdate(SQL);
+
+                statement = connection.createStatement();
+                SQL = "UPDATE stockcontrolcard SET issueDate = CURDATE() WHERE id = "+SCC;
+                statement.executeUpdate(SQL);
+
+            }
+
+            statement = connection.createStatement();
+            SQL = "UPDATE sales SET courier = "+saleGoods.getCourierId()+", sccId = "+saleGoods.getSccId()+" WHERE id = "+saleGoods.getSaleId()+";";
+            statement.executeUpdate(SQL);
+
+            statement = connection.createStatement();
+            SQL = "COMMIT;";
+            statement.executeUpdate(SQL);
+
+            return "commit";
+
+        } catch (SQLException e) {
+
+            statement = connection.createStatement();
+            SQL = "ROLLBACK";
+            statement.executeUpdate(SQL);
+
+            return e;
+        }
+
     }
 
 

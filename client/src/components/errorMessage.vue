@@ -31,8 +31,10 @@ export default {
 
       switch (this.errorCode) {
 
-        case 10:
-          return "test2"
+        case 12:
+          return "Выберите курьера для данной операции"
+        case 24:
+          return "Предметов для продажи нет в наличии"
         case 1062:
           return "Указанное имя для данного значения уже используется"
         default:

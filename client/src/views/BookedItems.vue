@@ -9,40 +9,53 @@
       <th>Почта покупателя</th>
       <th>Кол-во</th>
       <th>Курьер</th>
+      <th>Подтвердить заказ</th>
+      <th>Отменить заказ</th>
     </tr>
     </thead>
     <tbody>
     <tr v-for="(item, index) in bookedItems" :key="item[0]">
-      <td>{{index+1}}</td>
-      <td>{{item[2]}}</td>
-      <td> <router-link :to="'/item/'+item[1]">{{item[1]}}</router-link></td>
-      <td>{{item[3]}}</td>
-      <td>{{item[4]}}</td>
-      <td>{{item[5]}}</td>
-      <td>
-        <select name="" id="">
-          <option disabled value="" selected>Выберите курьера</option>
-          <option v-for="courier in couriers" :key="courier">{{courier[1]}}({{courier[0]}})</option>
-        </select>
-      </td>
+
+      <BookedRow :index="index" :item="item" :couriers="couriers" />
+
+<!--      <td>{{index+1}}</td>-->
+<!--      <td>{{item[2]}}</td>-->
+<!--      <td> <router-link :to="'/item/'+item[1]">{{item[1]}}</router-link></td>-->
+<!--      <td>{{item[3]}}</td>-->
+<!--      <td>{{item[4]}}</td>-->
+<!--      <td>{{item[5]}}</td>-->
+
+<!--      <td>-->
+<!--        <select name="" id="" v-model="selectedCouriers[index]">-->
+<!--          <option disabled value="" selected>Выберите курьера</option>-->
+<!--          <option v-for="courier in couriers" :key="courier">{{courier[1]}}({{courier[0]}})</option>-->
+<!--        </select>-->
+<!--      </td>-->
+<!--      <td><button @click="updateData">Подтвердить</button></td>-->
+<!--      <td><button>Отменить</button></td>-->
     </tr>
     </tbody>
   </table>
-  <button>Сохранить</button>
 </template>
 
 <script>
 import $api from "../axios";
+import BookedRow from "../components/BookedRow";
 
 export default {
   name: "BookedItems",
+  components: {BookedRow},
   data() {
     return {
       couriers: [],
-      bookedItems: []
+      bookedItems: [],
+      selectedCouriers: []
     }
   },
   async mounted() {
+
+    this.selectedCouriers.fill("Выберите курьера")
+
     const resCouriers = await $api.get("/goods/couriers")
     this.couriers = resCouriers.data
 
