@@ -7,7 +7,6 @@
       <th>Категория</th>
       <th>Изображение</th>
       <th>Описание</th>
-      <th>Склад</th>
       <th>Удаление записи</th>
     </tr>
     </thead>
@@ -24,12 +23,6 @@
       <td><input type="text" v-model="item[3]"></td>
       <td><input type="text" v-model="item[4]"></td>
       <td>
-        <select name="" id="" v-model="item[5]">
-          <option disabled value="" selected>Выберите склад</option>
-          <option v-for="storage in storages" :key="storage">{{storage}}</option>
-        </select>
-      </td>
-      <td>
         <router-link :to="'/delete/goods/'+item[0]">Удалить</router-link>
       </td>
     </tr>
@@ -45,7 +38,6 @@ export default {
   name: "editGoods",
   data() {
     return {
-      storages: [],
       categories: [],
       goods: []
     }
@@ -57,20 +49,15 @@ export default {
         param: this.goods
       })
 
-      console.log(JSON.stringify({...this.goods}))
     }
   },
   async mounted() {
     const resCategory = await $api.get("/goods/category")
     this.categories = resCategory.data
 
-    const resStorages = await $api.get("/goods/storage")
-    this.storages = resStorages.data
-
     const resGoods = await $api.get("/goods/items")
     this.goods = resGoods.data
 
-    console.log(this.categories, this.storages, this.goods)
 
   }
 }

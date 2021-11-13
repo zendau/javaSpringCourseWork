@@ -4,8 +4,8 @@
     <tr>
       <th>№</th>
       <th>Номер кладовщика</th>
-      <th>Адрес</th>
       <th>Карточка складского учета</th>
+      <th>Номер предмета</th>
       <th>Удаление записи</th>
     </tr>
     </thead>
@@ -18,11 +18,16 @@
           <option v-for="worker in workers" :key="worker[0]">{{worker[0]}}</option>
         </select>
       </td>
-      <td><input type="text" v-model="item[2]"></td>
       <td>
-        <select name="" id="" v-model="item[3]">
+        <select name="" id="" v-model="item[2]">
           <option disabled value="" selected>Выберите карточку складского учета</option>
           <option v-for="waybill in SCCs" :key="waybill[0]">{{waybill[0]}}</option>
+        </select>
+      </td>
+      <td>
+        <select name="" id="" v-model="item[3]">
+          <option disabled value="" selected>Выберите номер предмета</option>
+          <option v-for="item in items" :key="item[0]">{{item[0]}}</option>
         </select>
       </td>
       <td>
@@ -43,7 +48,8 @@ export default {
     return {
       storages: [],
       workers: [],
-      SCCs: []
+      SCCs: [],
+      items: []
     }
   },
   methods: {
@@ -65,6 +71,8 @@ export default {
     const resSCCs = await $api.get("/goods/SCCs")
     this.SCCs = resSCCs.data
 
+    const resItems = await $api.get("/goods/items")
+    this.items = resItems.data
 
   }
 }

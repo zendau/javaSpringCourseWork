@@ -20,7 +20,7 @@ import editWaybills from "../views/edit/editWaybills";
 import editStorage from "../views/edit/editStorage";
 import editSCC from "../views/edit/editSCC";
 import Delete from "../views/Delete";
-import Replenishment from "../views/Replenishment";
+import All_items from "../views/All_items";
 
 const routes = [
   {
@@ -34,12 +34,9 @@ const routes = [
     component: RegisterItem
   },
   {
-    path: '/about',
-    name: 'About',
-    // route level code-splitting
-    // this generates a separate chunk (about.[hash].js) for this route
-    // which is lazy-loaded when the route is visited.
-    component: () => import(/* webpackChunkName: "about" */ '../views/All_items.vue')
+    path: '/shop',
+    name: 'Shop',
+    component: All_items
   },
   {
     path: "/reference",
@@ -135,11 +132,6 @@ const routes = [
     path: "/delete/:type/:id",
     name: "Delete",
     component: Delete
-  },
-  {
-    path: "/replenishment",
-    name: "Replenishment",
-    component: Replenishment
   }
 ]
 

@@ -2,11 +2,10 @@
   <div id="nav">
     <router-link to="/">Добавление товаров</router-link> |
     <router-link to="/addItem">Регистрация товара</router-link> |
-    <router-link to="/replenishment">Пополнение товаров</router-link> |
     <router-link to="/add">Добавление</router-link> |
     <router-link to="/edit">Редактирование</router-link> |
     <router-link to="/BookedItems">Забронированные товары</router-link> |
-    <router-link to="/about">Просмотр товаров</router-link> |
+    <router-link to="/shop">Просмотр товаров</router-link> |
     <router-link to="/reference">Справочные таблицы</router-link>
   </div>
   <router-view/>

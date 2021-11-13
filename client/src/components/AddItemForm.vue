@@ -17,11 +17,6 @@
         <option v-for="item in category" :key="item">{{item}}</option>
       </select>
 
-      <select v-model="storageId">
-        <option disabled value="" selected>Выберите позицию на складе</option>
-        <option v-for="item in storage" :key="item">{{item}}</option>
-      </select>
-
       <textarea v-model="desk" placeholder="Описание" id="desk" cols="30" rows="10"></textarea>
       <input type="submit" value="Добавить товар">
     </form>
@@ -41,8 +36,7 @@
         name: "",
         itemCategory: "",
         image: "",
-        desk: "",
-        storageId: ""
+        desk: ""
      }
    },
    methods: {
@@ -51,11 +45,8 @@
         name: this.name,
         category: this.itemCategory,
         image: this.image,
-        description: this.desk,
-        storageId: this.storageId
+        description: this.desk
       })
-
-      console.log(this.name, this.itemCategory, this.image, this.desk, this.storageId)
     }
    },
    props: ["storage", "category"],
@@ -79,6 +70,13 @@
     margin-right: 10px;
     margin-left: 10px;
     padding: 5px;
+  }
+
+  select {
+    grid-column: 1/3;
+    width: 100%;
+    margin: 0 0 10px;
+
   }
 
   textarea {

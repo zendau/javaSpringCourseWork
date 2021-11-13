@@ -40,11 +40,6 @@
       </div>
 
       <div>
-        <label for="address">Адрес склада</label>
-        <input v-model="address"  id="address" type="text" placeholder="Адрес склада" required>
-      </div>
-
-      <div>
         <label for="providerName">Имя поставщика</label>
         <input v-model="providerName"  id="providerName" type="text" placeholder="Имя поставщика" required>
       </div>
@@ -85,8 +80,7 @@
        worker: "",
        providerName: "",
        providerPhone: "",
-       goods: [],
-       address: ""
+       goods: []
      }
    },
    methods: {
@@ -100,7 +94,6 @@
         price1: this.price1,
         price2: this.price2,
         worker: this.worker,
-        address: this.address,
         providerName: this.providerName,
         providerPhone: this.providerPhone,
       })
@@ -158,7 +151,7 @@
     max-width: 800px;
   }
 
-  select:nth-child(1) {
+  select {
     grid-column: 1/3;
     width: 100%;
     margin-bottom: 10px;
