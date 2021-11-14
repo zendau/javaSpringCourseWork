@@ -10,7 +10,6 @@ public class Goods {
     private String category;
     private String image;
     private String description;
-    private int storageId;
 
     public void setCategory(String category) {
         this.category = category;
@@ -37,15 +36,10 @@ public class Goods {
     public void setName(String name) {
         this.name = name;
     }
+    @Id
     public String getName() {
         return this.name;
     }
 
-    public void setStorageId(int storageId) {
-        this.storageId = storageId;
-    }
-    @Id
-    public int getStorageId() {
-        return this.storageId;
-    }
+
 }

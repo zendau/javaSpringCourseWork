@@ -45,7 +45,7 @@ export default {
         if (res.data === 24) {
           this.update(true, 24)
         }
-        //window.location.reload()
+        window.location.reload()
       }
     },
     async cancelData() {

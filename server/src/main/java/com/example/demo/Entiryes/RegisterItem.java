@@ -14,7 +14,6 @@ public class RegisterItem {
     private int price1;
     private int price2;
     private int worker;
-    private String address;
     private String providerName;
     private String providerPhone;
 
@@ -73,11 +72,6 @@ public class RegisterItem {
     public int getWorker() {
         return this.worker;
     }
-
-    public void setAddress(String address) {
-        this.address = address;
-    }
-    public String getAddress() {return this.address;}
 
     public void setProviderName(String providerName) {
         this.providerName = providerName;

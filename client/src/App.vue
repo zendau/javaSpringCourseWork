@@ -1,12 +1,17 @@
 <template>
-  <div id="nav">
-    <router-link to="/">Добавление товаров</router-link> |
+  <div class="nav" v-if="getAuthStatus" >
+    <router-link to="/newItem">Добавление товаров</router-link> |
     <router-link to="/addItem">Регистрация товара</router-link> |
     <router-link to="/add">Добавление</router-link> |
     <router-link to="/edit">Редактирование</router-link> |
     <router-link to="/BookedItems">Забронированные товары</router-link> |
     <router-link to="/shop">Просмотр товаров</router-link> |
-    <router-link to="/reference">Справочные таблицы</router-link>
+    <router-link to="/reference">Справочные таблицы</router-link> |
+    <router-link to="/exit">Выход</router-link>
+  </div>
+  <div class="nav" v-else>
+    <router-link to="/shop">Просмотр товаров</router-link> |
+    <router-link to="/login">Авторизация</router-link>
   </div>
   <router-view/>
   <error-message :error-code="errorCode" :status="errorStatus"  />
@@ -21,7 +26,7 @@
   color: #2c3e50;
 }
 
-#nav {
+.nav {
   padding: 30px;
 
   a {
@@ -42,6 +47,7 @@ export default {
     return {
       errorStatus: false,
       errorCode: 0,
+      auth: false
     }
   },
   provide() {
@@ -49,13 +55,21 @@ export default {
       update: this.updateError
     }
   },
+  mounted() {
+    this.$store.dispatch("checkStatus")
+    this.auth = this.$store.state.auth
+  },
   methods: {
     updateError(newStatus, code) {
 
-      console.log(newStatus)
-
       this.errorStatus = newStatus
       this.errorCode = code
+    }
+  },
+  computed: {
+    getAuthStatus() {
+      console.log(this.$store.state.authStatus)
+      return this.$store.state.authStatus
     }
   }
 }

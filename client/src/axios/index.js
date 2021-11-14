@@ -13,7 +13,7 @@ $api.interceptors.response.use((config) => {
     console.log(error)
 
     if (error.response.status === 500 && error.config) {
-        //window.location.reload()
+        window.location.reload()
     }
     throw error;
 });

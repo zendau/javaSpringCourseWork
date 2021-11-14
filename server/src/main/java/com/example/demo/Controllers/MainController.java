@@ -1,5 +1,6 @@
 package com.example.demo.Controllers;
 
+import com.example.demo.Entiryes.Login;
 import com.example.demo.Entiryes.Users;
 import org.springframework.web.bind.annotation.*;
 
@@ -24,32 +25,14 @@ public class MainController {
     }
 
 
-    @PostMapping
-    public ArrayList testPost(@RequestBody Users test) throws SQLException {
+    @PostMapping("/login")
+    public Boolean login(@RequestBody Login loginData) throws SQLException {
 
-        Statement statement = connection.createStatement();
-        String SQL = "SELECT * FROM goods";
-        ResultSet resultSet =  statement.executeQuery(SQL);
-
-        ArrayList test2 ;
-
-        ArrayList test3 = new ArrayList<>();
-
-        while (resultSet.next()) {
-
-            test2 = new ArrayList<>();
-
-            test2.add(resultSet.getInt("id"));
-            test2.add(resultSet.getString("name"));
-            test2.add(resultSet.getString("category"));
-            test2.add(resultSet.getString("image"));
-            test2.add(resultSet.getString("description"));
-
-            test3.add(test2);
+        if (loginData.getLogin().equals("root") && loginData.getPassword().equals("root")) {
+            return true;
+        } else {
+            return false;
         }
-
-        System.out.println(test.getId());
-        return test3;
     }
 
 }
