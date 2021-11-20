@@ -1,13 +1,13 @@
 <template>
-  <div class="hello">
+  <div class="form-container">
     <form @submit.prevent="formSubmit">
       <div>
         <label for="role">Роль</label>
-        <input v-model="name" id="role" type="text" placeholder="Роль">
+        <input v-model="name" id="role" type="text" placeholder="Введите роль">
       </div>
 
       <textarea v-model="desk" placeholder="Описание" id="desk" cols="30" rows="10"></textarea>
-      <input type="submit" value="Добавить">
+      <input type="submit" value="Добавить" class="btn btn-primary">
     </form>
 
   </div>

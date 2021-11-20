@@ -1,5 +1,5 @@
 <template>
-  <div class="home">
+  <div class="form-container">
     <RegisterItemForm :storage="storage" :category="categories"/>
   </div>
 </template>

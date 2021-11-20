@@ -1,15 +1,22 @@
 <template>
-  <select v-model="categoryId">
-    <option value="all">Все категории</option>
-    <option v-for="item in categories" :key="item">{{item}}</option>
-  </select>
+
+  <div class="filter">
+    <p>Выберите категорию:</p>
+    <select v-model="categoryId" class="form-select">
+      <option value="all">Все категории</option>
+      <option v-for="item in categories" :key="item">{{item}}</option>
+    </select>
+  </div>
   <div class="container" v-if="filterCategory.length > 0">
-    <div  class="item" v-for="item in filterCategory" :key="item[0]">
-      <h2>{{item[1]}}</h2>
-      <small>{{item[2]}}</small>
-      <img :src="'/img/'+item[3]" alt="Изображение товара">
-      <p>{{new Intl.NumberFormat('ru-RU', { style: 'currency', currency: 'RUB' }).format(item[4])}}</p>
-      <RouterLink :to="'/item/'+item[0]">Купить</RouterLink>
+
+    <div class="card" style="width: 18rem;" v-for="item in filterCategory" :key="item[0]">
+      <img :src="'/img/'+item[3]" class="card-img-top" alt="Изображение товара">
+      <div class="card-body">
+        <h5 class="card-title">{{item[1]}}</h5>
+        <p class="card-text">{{item[2]}}</p>
+        <p class="card-text">{{new Intl.NumberFormat('ru-RU', { style: 'currency', currency: 'RUB' }).format(item[4])}}</p>
+        <RouterLink class="btn btn-primary" :to="'/item/'+item[0]">Купить</RouterLink>
+      </div>
     </div>
   </div>
   <p v-else>Товаров не найдено</p>
@@ -52,7 +59,7 @@
 
 </script>
 
-<style scoped>
+<style scoped lang="scss">
 
     .container {
       display: grid;
@@ -72,6 +79,32 @@
 
     img {
       height: 160px;
+    }
+
+    .card-img-top {
+      height: 160px;
+      width: 100px;
+      justify-self: center;
+      align-self: center;
+      padding: 10px;
+    }
+
+    .filter {
+      display: flex;
+      margin: 0 auto;
+      justify-content: center;
+      align-items: center;
+
+      margin: 30px 0;
+
+      p {
+        margin: 0 10px 0 0;
+      }
+
+    }
+
+    .form-select {
+      width: 250px;
     }
 
 </style>

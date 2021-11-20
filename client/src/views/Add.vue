@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="form-container">
     Добавление данных
     <RouterLink class="link" to="/addWorkers">Работники</RouterLink>
     <RouterLink class="link" to="/addCategories">Категории</RouterLink>

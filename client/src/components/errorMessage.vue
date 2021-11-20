@@ -35,10 +35,12 @@ export default {
           return "Выберите курьера для данной операции"
         case 24:
           return "Предметов для продажи нет в наличии"
+        case 25:
+          return "Не верный логин или пароль"
         case 1062:
           return "Указанное имя для данного значения уже используется"
         default:
-          return "test"
+          return "Неизвестная ошибка"
       }
 
 
@@ -72,6 +74,7 @@ export default {
   align-items: center;
 }
 h1 {
+  margin-top: 70px;
   color: black;
   z-index: 100;
   font-size: 40px;

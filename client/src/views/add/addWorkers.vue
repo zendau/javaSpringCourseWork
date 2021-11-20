@@ -1,14 +1,17 @@
 <template>
-  <div class="hello">
+  <div class="form-container">
     <form @submit.prevent="formSubmit">
       <div>
         <label for="name">Имя работника</label>
         <input id="name" type="text" placeholder="Имя работника" v-model="name">
       </div>
-      <select name="" id="" v-model="role">
-        <option disabled value="" selected>Выберите роль работника</option>
-        <option v-for="item in roles" :value="item[1]" :key="item[0]">{{item[1]}}</option>
-      </select>
+      <div>
+        <p>Работник:</p>
+        <select name="" id="" v-model="role">
+          <option disabled value="" selected>Выберите роль работника</option>
+          <option v-for="item in roles" :value="item[1]" :key="item[0]">{{item[1]}}</option>
+        </select>
+      </div>
       <div>
         <label for="birthday">День рождения</label>
         <input id="birthday" v-model="birthday" type="date" placeholder="День рождения">
@@ -25,7 +28,7 @@
         <label for="salary">Зарплата</label>
         <input id="salary" v-model="salary" type="number" placeholder="Зарплата">
       </div>
-      <input type="submit" value="Добавить">
+      <input type="submit" value="Добавить" class="btn btn-primary">
     </form>
 
   </div>
@@ -78,7 +81,7 @@ form {
   grid-template-columns: 1fr 1fr;
   justify-items: baseline;
 }
-label {
+label, p {
   display: inline-block;
   min-width: 200px;
 }

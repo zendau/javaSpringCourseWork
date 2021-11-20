@@ -1,18 +1,49 @@
 <template>
-  <div class="nav" v-if="getAuthStatus" >
-    <router-link to="/newItem">Добавление товаров</router-link> |
-    <router-link to="/addItem">Регистрация товара</router-link> |
-    <router-link to="/add">Добавление</router-link> |
-    <router-link to="/edit">Редактирование</router-link> |
-    <router-link to="/BookedItems">Забронированные товары</router-link> |
-    <router-link to="/shop">Просмотр товаров</router-link> |
-    <router-link to="/reference">Справочные таблицы</router-link> |
-    <router-link to="/exit">Выход</router-link>
-  </div>
-  <div class="nav" v-else>
-    <router-link to="/shop">Просмотр товаров</router-link> |
-    <router-link to="/login">Авторизация</router-link>
-  </div>
+
+  <nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <div class="container-fluid">
+      <a class="navbar-brand" href="#">Виртуальный магазин</a>
+      <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <ul class="navbar-nav me-auto mb-2 mb-lg-0" v-if="getAuthStatus">
+          <li class="nav-item">
+            <router-link to="/newItem" class="nav-link">Добавление товаров</router-link>
+          </li>
+          <li class="nav-item">
+            <router-link to="/addItem" class="nav-link">Регистрация товара</router-link>
+          </li>
+          <li class="nav-item">
+            <router-link to="/add" class="nav-link">Добавление</router-link>
+          </li>
+          <li class="nav-item">
+            <router-link to="/edit" class="nav-link">Редактирование</router-link>
+          </li>
+          <li class="nav-item">
+            <router-link to="/BookedItems" class="nav-link">Забронированные товары</router-link>
+          </li>
+          <li class="nav-item">
+            <router-link to="/shop" class="nav-link">Просмотр товаров</router-link>
+          </li>
+          <li class="nav-item">
+            <router-link to="/reference" class="nav-link">Справочные таблицы</router-link>
+          </li>
+          <li class="nav-item">
+            <router-link to="/exit" class="nav-link">Выход</router-link>
+          </li>
+        </ul>
+        <ul class="navbar-nav me-auto mb-2 mb-lg-0" v-else>
+          <li class="nav-item">
+            <router-link to="/shop" class="nav-link">Просмотр товаров</router-link>
+          </li>
+          <li class="nav-item">
+            <router-link to="/basket" class="nav-link">Корзина</router-link>
+          </li>
+          <li class="nav-item">
+            <router-link to="/login" class="nav-link">Авторизация</router-link>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </nav>
   <router-view/>
   <error-message :error-code="errorCode" :status="errorStatus"  />
 </template>
@@ -38,6 +69,20 @@
     }
   }
 }
+
+.table {
+  width: 1200px;
+  margin: 20px auto;
+}
+
+.btn-mb {
+  margin-bottom: 30px;
+}
+
+.form-container {
+  margin-top: 30px;
+}
+
 </style>
 <script>
 import ErrorMessage from "./components/errorMessage";

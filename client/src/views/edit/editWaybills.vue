@@ -44,7 +44,7 @@
     </tr>
     </tbody>
   </table>
-  <button @click="editData">Сохранить</button>
+  <button @click="editData" class="btn btn-primary btn-mb">Сохранить</button>
 </template>
 
 <script>
@@ -88,40 +88,4 @@ export default {
 </script>
 
 <style scoped lang="scss">
-table {
-  width: 1000px;
-  border: none;
-  margin: 0 auto 20px;
-  thead {
-    th {
-      font-weight: bold;
-      border: none;
-      padding: 10px 15px;
-      background: #d8d8d8;
-      font-size: 14px;
-      border-left: 1px solid #ddd;
-      border-right: 1px solid #ddd;
-      text-align: center;
-    }
-  }
-  tbody {
-    tr:nth-child(even){
-      background: #f3f3f3;
-    }
-    td {
-      border-left: 1px solid #ddd;
-      border-right: 1px solid #ddd;
-      padding: 10px 15px;
-      font-size: 14px;
-      vertical-align: top;
-      text-align: center;
-    }
-  }
-  thead tr th:first-child, .table tbody tr td:first-child {
-    border-left: none;
-  }
-  thead tr th:last-child, .table tbody tr td:last-child {
-    border-right: none;
-  }
-}
 </style>

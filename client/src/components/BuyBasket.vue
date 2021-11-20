@@ -9,16 +9,12 @@
             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" @click="closeModal"></button>
           </div>
           <div class="modal-body">
-            <form>
+            <form @submit.prevent="buyBasket">
               <div class="mb-3">
                 <label for="email" class="form-label">Введите ваш email</label>
                 <input type="email" class="form-control" id="email" required v-model="email" placeholder="user@gmail.com"/>
               </div>
-              <div class="mb-3">
-                <label for="count" class="form-label">Количество покупаемого товара</label>
-                <input  class="form-control" required type="number" :max="count" min="1"  v-model="countOfItems" id="count">
-              </div>
-              <p>Сумма к оплате - {{getCurrency}}</p>
+              <p>Сумма к оплате - {{currency}}</p>
               <button type="submit" class="btn btn-primary">Произвести покупку</button>
             </form>
           </div>
@@ -29,35 +25,50 @@
 </template>
 
 <script>
-import $api from "../axios";
+//import $api from "../axios";
 
 export default {
-  name: "BuyItem",
-  props: ["currency", "count", "itemId"],
+  name: "BuyBasket",
+  props: ["currency", "items"],
   methods: {
     closeModal() {
       this.$emit("closeModal")
     },
-    async buyItem() {
+    async buyBasket() {
 
-      await $api.post("/goods/buyGoods", {
-        itemId: this.itemId,
-        mailOfBuyer: this.email,
-        count: this.countOfItems
+      const data = {
+        items: [
+          {
+            id: 0,
+            count: 0
+          }
+        ],
+        mailOfBuyer: ""
+      }
+
+
+      this.items.forEach((item,index) => {
+        data.items[index].id = item.itemData[0]
+        data.items[index].count = item.count
       })
+
+
+      data.mailOfBuyer = this.email
+
+
+      console.log(data)
+
+      // await $api.post("/goods/buyGoods", {
+      //   itemId: this.itemId,
+      //   mailOfBuyer: this.email,
+      //   count: this.countOfItems
+      // })
       this.closeModal()
     }
   },
   data() {
     return {
-      countOfItems: 1,
       email: ""
-    }
-  },
-  computed: {
-    getCurrency() {
-      console.log(parseInt(this.currency), this.countOfItems)
-      return new Intl.NumberFormat('ru-RU', { style: 'currency', currency: 'RUB' }).format(this.currency * this.countOfItems)
     }
   }
 }

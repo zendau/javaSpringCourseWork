@@ -23,6 +23,7 @@ import Delete from "../views/Delete";
 import All_items from "../views/All_items";
 import login from "../views/login";
 import Exit from "../views/Exit";
+import basket from "../views/basket";
 
 const routes = [
   {
@@ -216,12 +217,21 @@ const routes = [
     meta: {
       requiresAuth: false
     }
+  },
+  {
+    path: "/basket",
+    name: "Basket",
+    component: basket,
+    meta: {
+      requiresAuth: false
+    }
   }
 ]
 
 const router = createRouter({
   history: createWebHistory(process.env.BASE_URL),
-  routes
+  routes,
+  linkExactActiveClass: "active"
 })
 
 router.beforeEach((to, from, next) => {

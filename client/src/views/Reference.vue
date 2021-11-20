@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="form-container">
     Справочные таблицы
     <RouterLink class="link" to="/workers">Работники</RouterLink>
     <RouterLink class="link" to="/sales">Продажи</RouterLink>

@@ -12,8 +12,8 @@
       <option v-for="courier in couriers" :key="courier" :value="courier[0]">{{courier[1]}}({{courier[0]}})</option>
     </select>
   </td>
-  <td><button @click="updateData">Подтвердить</button></td>
-  <td><button @click="cancelData">Отменить</button></td>
+  <td><button @click="updateData" class="btn btn-success">Подтвердить</button></td>
+  <td><button @click="cancelData" class="btn btn-danger">Отменить</button></td>
 </template>
 
 <script>
@@ -65,11 +65,6 @@ export default {
 
 <style scoped>
 td {
-  border-left: 1px solid #ddd;
-  border-right: 1px solid #ddd;
-  padding: 10px 15px;
-  font-size: 14px;
-  vertical-align: top;
-  text-align: center;
+  vertical-align: middle;
 }
 </style>

@@ -1,5 +1,5 @@
 <template>
-  <div class="hello">
+  <div class="form-container">
 
     <form @submit.prevent="formSubmit">
       <select v-model="name">
@@ -54,7 +54,7 @@
         <option v-for="item in workers" :key="item" :value="item[0]">{{item[1]}}({{item[0]}})</option>
       </select>
 
-      <input type="submit" value="Зарегестрировать товар">
+      <input type="submit" value="Зарегестрировать товар" class="btn btn-primary">
     </form>
     
 

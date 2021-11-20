@@ -1,5 +1,5 @@
 <template>
-  <div class="hello">
+  <div class="form-container">
 
     <form @submit.prevent="formSubmit">
       <div>
@@ -18,7 +18,7 @@
       </select>
 
       <textarea v-model="desk" placeholder="Описание" id="desk" cols="30" rows="10"></textarea>
-      <input type="submit" value="Добавить товар">
+      <input type="submit" value="Добавить товар" class="btn btn-primary">
     </form>
     
 

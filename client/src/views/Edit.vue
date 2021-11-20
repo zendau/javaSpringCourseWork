@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="form-container">
     Редактирование данных
     <RouterLink class="link" to="/editGoods">Товары</RouterLink>
     <RouterLink class="link" to="/editProviders">Поставщики</RouterLink>

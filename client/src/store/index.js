@@ -3,11 +3,15 @@ import $api from "../axios";
 
 export default createStore({
   state: {
-    authStatus: false
+    authStatus: false,
+    errorCode: 0
   },
   mutations: {
     changeStatus(state, status) {
       state.authStatus = status
+    },
+    updateErrorCode(state, code) {
+      state.errorCode = code
     }
   },
   actions: {
@@ -18,9 +22,11 @@ export default createStore({
         password: data.password
       })
 
-      if (res) {
+      if (res.data) {
         localStorage.setItem("auth", "true")
         ctx.commit("changeStatus", true)
+      } else {
+        ctx.commit("updateErrorCode", 25)
       }
     },
     checkStatus(ctx) {
