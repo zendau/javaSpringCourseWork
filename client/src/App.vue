@@ -24,6 +24,9 @@
             <router-link to="/shop" class="nav-link">Просмотр товаров</router-link>
           </li>
           <li class="nav-item">
+            <router-link to="/basket" class="nav-link">Корзина</router-link>
+          </li>
+          <li class="nav-item">
             <router-link to="/reference" class="nav-link">Справочные таблицы</router-link>
           </li>
           <li class="nav-item">

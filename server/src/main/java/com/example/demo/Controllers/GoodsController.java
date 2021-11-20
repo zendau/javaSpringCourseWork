@@ -788,6 +788,35 @@ public class GoodsController {
         }
     }
 
+    @PostMapping("/buyBasket")
+    public Object buyBasket(@RequestBody LinkedHashMap param) {
+
+        LinkedHashMap values = (LinkedHashMap) param.get("items");
+
+        ArrayList items = (ArrayList) values.get("items");
+        String mail = (String) values.get("mailOfBuyer");
+
+        String SQL = "INSERT INTO sales (itemId, dateOfSale, mailOfBuyer, count) VALUE (?, CURDATE(), ?, ?)";
+
+        for (int i = 0; i < items.size(); i++) {
+
+            try {
+
+                LinkedHashMap temp = (LinkedHashMap) items.get(i);
+                
+                PreparedStatement preparedStatement = connection.prepareStatement(SQL);
+                preparedStatement.setInt(1, Integer.parseInt((String) temp.get("id")));
+                preparedStatement.setString(2, mail);
+                preparedStatement.setInt(3, (Integer) temp.get("count"));
+
+                preparedStatement.executeUpdate();
+            } catch (SQLException e) {
+                return e;
+            }
+        }
+        return true;
+    }
+
     @PostMapping("/saleGoods")
     public Object saleGoods(@RequestBody SaleGoods saleGoods) throws SQLException {
 

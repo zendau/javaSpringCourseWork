@@ -25,7 +25,7 @@
 </template>
 
 <script>
-//import $api from "../axios";
+import $api from "../axios";
 
 export default {
   name: "BuyBasket",
@@ -58,11 +58,10 @@ export default {
 
       console.log(data)
 
-      // await $api.post("/goods/buyGoods", {
-      //   itemId: this.itemId,
-      //   mailOfBuyer: this.email,
-      //   count: this.countOfItems
-      // })
+      await $api.post("/goods/buyBasket", {
+        items: data,
+        mailOfBuyer: this.email,
+      })
       this.closeModal()
     }
   },
