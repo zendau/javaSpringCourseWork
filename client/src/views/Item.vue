@@ -4,7 +4,7 @@
       <div class="item-container">
         <div class="wrapper">
           <h1>{{itemData[1]}}</h1>
-          <img :src="'/img/'+itemData[3]" alt="Изображение товара">
+          <img :src="'http://localhost:8080/'+itemData[3]" alt="Изображение товара">
         </div>
         <div class="wrapper">
           <p>Категория: {{itemData[2]}}</p>
@@ -32,6 +32,7 @@ import $api from "../axios";
 import BuyItem from "../components/BuyItem";
 
 export default {
+  // eslint-disable-next-line vue/multi-word-component-names
   name: "Item",
   components: {
     BuyItem

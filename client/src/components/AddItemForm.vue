@@ -9,7 +9,7 @@
 
       <div>
         <label for="image">Изображение товара</label>
-        <input v-model="image" id="image" type="text" placeholder="Изображение товара">
+        <input id="image" ref="inputImage" type="file" placeholder="Изображение товара">
       </div>
 
       <select v-model="itemCategory">
@@ -20,8 +20,6 @@
       <textarea v-model="desk" placeholder="Описание" id="desk" cols="30" rows="10"></textarea>
       <input type="submit" value="Добавить товар" class="btn btn-primary">
     </form>
-    
-
 
   </div>
 </template>
@@ -35,17 +33,23 @@
      return {
         name: "",
         itemCategory: "",
-        image: "",
         desk: ""
      }
    },
    methods: {
     formSubmit() {
-      $api.post("/goods/add", {
-        name: this.name,
-        category: this.itemCategory,
-        image: this.image,
-        description: this.desk
+
+      const form = new FormData();
+
+      form.append("category", this.itemCategory)
+      form.append("name", this.name)
+      form.append("description", this.desk)
+      form.append('file', this.$refs.inputImage.files[0]);
+
+      $api.post("/goods/add", form).then(res => {
+
+       console.log(res.data)
+
       })
     }
    },

@@ -10,7 +10,7 @@
   <div class="container" v-if="filterCategory.length > 0">
 
     <div class="card" style="width: 18rem;" v-for="item in filterCategory" :key="item[0]">
-      <img :src="'/img/'+item[3]" class="card-img-top" alt="Изображение товара">
+      <img :src="'http://localhost:8080/'+item[3]" class="card-img-top" alt="Изображение товара">
       <div class="card-body">
         <h5 class="card-title">{{item[1]}}</h5>
         <p class="card-text">{{item[2]}}</p>

@@ -50,7 +50,7 @@ public class ReverenceController {
     public ArrayList getSales() throws SQLException {
 
         Statement statement = connection.createStatement();
-        String SQL = "SELECT s.id, s.price, s.arrivadDate, s.issueDate, g.name, s1.mailOfBuyer, w.waybillName FROM stockcontrolcard s INNER JOIN waybill w ON s.id = w.SccId INNER JOIN goods g ON w.itemId = g.id INNER JOIN sales s1 ON g.id = s1.itemId WHERE s.issueDate IS NOT NULL";
+        String SQL = "SELECT sales.id, name, stockcontrolcard.price , arrivadDate, issueDate, mailOfBuyer, sales.count, waybillName FROM sales INNER JOIN stockcontrolcard ON sccId = stockcontrolcard.id INNER JOIN goods ON itemId = goods.id INNER JOIN waybill ON waybill.SccId = stockcontrolcard.id WHERE issueDate IS NOT NULL";
         ResultSet resultSet =  statement.executeQuery(SQL);
 
         ArrayList saleItem;
@@ -66,6 +66,7 @@ public class ReverenceController {
             saleItem.add(resultSet.getString("arrivadDate"));
             saleItem.add(resultSet.getString("issueDate"));
             saleItem.add(resultSet.getString("mailOfBuyer"));
+            saleItem.add(resultSet.getString("count"));
             saleItem.add(resultSet.getString("waybillName"));
 
             saleItems.add(saleItem);

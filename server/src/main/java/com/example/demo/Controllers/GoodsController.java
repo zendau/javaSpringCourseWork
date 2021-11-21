@@ -1,11 +1,20 @@
 package com.example.demo.Controllers;
 
 import com.example.demo.Entiryes.*;
+import org.apache.tomcat.util.http.fileupload.ByteArrayOutputStream;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import javax.imageio.ImageIO;
+import java.awt.image.BufferedImage;
+import java.io.BufferedOutputStream;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.InputStream;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
+import java.util.Random;
 
 
 @RestController
@@ -296,19 +305,56 @@ public class GoodsController {
     }
 
     @PostMapping("/add")
-    public int addItem(@RequestBody Goods newItem) throws SQLException {
+    public String addItem(@RequestParam("category") String category,
+                       @RequestParam("name") String name,
+                       @RequestParam("description") String description,
+                       @RequestParam("file") MultipartFile file) throws SQLException {
 
-        String SQL = "INSERT INTO goods (name, category, image, description) VALUE (?, ?, ?, ?)";
+        if (!file.isEmpty()) {
+            try {
+                byte[] bytes = file.getBytes();
 
-        PreparedStatement preparedStatement = connection.prepareStatement(SQL);
-        preparedStatement.setString(1, newItem.getName());
-        preparedStatement.setString(2, newItem.getCategory());
-        preparedStatement.setString(3, newItem.getImage());
-        preparedStatement.setString(4, newItem.getDescription());
 
-        int result = preparedStatement.executeUpdate();
+                String type = file.getContentType().split("/")[1];
 
-        return result;
+                String chars = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
+                Random rnd = new Random();
+                StringBuilder sb = new StringBuilder(10);
+                for (int i = 0; i < 10; i++)
+                    sb.append(chars.charAt(rnd.nextInt(chars.length())));
+
+                String rnbName = sb.toString();
+
+                String fileName = rnbName + "." + type;
+
+                String path = "src/main/resources/static/"+fileName;
+
+                BufferedOutputStream stream =
+                        new BufferedOutputStream(new FileOutputStream(new File(path)));
+
+
+                stream.write(bytes);
+                stream.close();
+
+                String SQL = "INSERT INTO goods (name, category, image, description) VALUE (?, ?, ?, ?)";
+
+                PreparedStatement preparedStatement = connection.prepareStatement(SQL);
+                preparedStatement.setString(1, name);
+                preparedStatement.setString(2, category);
+                preparedStatement.setString(3, fileName);
+                preparedStatement.setString(4, description);
+
+                preparedStatement.executeUpdate();
+
+                return name;
+            } catch (Exception e) {
+                return "Вам не удалось загрузить " + name + " => " + e.getMessage();
+            }
+        } else {
+            return "Вам не удалось загрузить " + name + " потому что файл пустой.";
+        }
+
+
     }
 
     @PostMapping("/addWorkers")
@@ -884,6 +930,49 @@ public class GoodsController {
         }
 
     }
+
+
+    @RequestMapping(value="/upload", method=RequestMethod.POST)
+    public @ResponseBody
+    Object handleFileUpload(@RequestParam("name") String category,
+                            @RequestParam("name") String name,
+                            @RequestParam("name") String description,
+                            @RequestParam("file") MultipartFile file){
+        if (!file.isEmpty()) {
+            try {
+                byte[] bytes = file.getBytes();
+
+                String type[] = name.split("[.]");
+
+                String chars = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
+                Random rnd = new Random();
+                StringBuilder sb = new StringBuilder(10);
+                for (int i = 0; i < 10; i++)
+                    sb.append(chars.charAt(rnd.nextInt(chars.length())));
+
+                String rnbName = sb.toString();
+
+                String fileName = type[0] + rnbName + "." + type[1];
+
+                String path = "src/main/resources/static/"+fileName;
+
+                BufferedOutputStream stream =
+                        new BufferedOutputStream(new FileOutputStream(new File(path)));
+
+                
+                stream.write(bytes);
+                stream.close();
+
+
+                return "Вы удачно загрузили " + name + " в " + path + " !";
+            } catch (Exception e) {
+                return "Вам не удалось загрузить " + name + " => " + e.getMessage();
+            }
+        } else {
+            return "Вам не удалось загрузить " + name + " потому что файл пустой.";
+        }
+    }
+
 
 
 
