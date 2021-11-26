@@ -64,7 +64,7 @@ export default {
 
       let basket = localStorage.getItem("basket")
 
-      if (basket === null) {
+      if (basket === null || basket === "") {
         basket = []
       } else {
         basket = JSON.parse(basket)

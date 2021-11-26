@@ -1,22 +1,26 @@
 <template>
   <div class="home">
-    <HelloWorld :storage="storage" :category="categories"/>
+    <AddItemForm @updateFilter="formSubmit"/>
   </div>
 </template>
 
 <script>
 
-import HelloWorld from "../components/AddItemForm"
+import AddItemForm from "../components/AddItemForm"
 import $api from "../axios";
 
 export default {
   data() {
     return {
-      storage: [],
-      categories: []
+
     }
   },
   methods: {
+    formSubmit(form) {
+
+      $api.post("/goods/add", form)
+
+    }
 
   },
   async mounted() {
@@ -28,7 +32,7 @@ export default {
     this.categories = resCategories.data
   },
   components: {
-    HelloWorld
+    AddItemForm
   }
 }
 </script>

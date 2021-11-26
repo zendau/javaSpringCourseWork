@@ -23,7 +23,6 @@
 </template>
 
 <script>
-  import $api from "../axios";
 
   export default {
     data() {
@@ -45,15 +44,6 @@
           return this.items.filter(item => item[2] === this.categoryId)
         }
       }
-    },
-    async mounted() {
-
-      const resCategories = await $api.get("/goods/category")
-      this.categories = resCategories.data
-
-      const resStorage = await $api.get("/goods/all")
-      this.items = resStorage.data
-
     }
   }
 
@@ -77,13 +67,17 @@
       padding: 10px;
     }
 
+    .card {
+      margin-top: 20px;
+    }
+
     img {
       height: 160px;
     }
 
     .card-img-top {
       height: 160px;
-      width: 100px;
+      width: auto;
       justify-self: center;
       align-self: center;
       padding: 10px;
