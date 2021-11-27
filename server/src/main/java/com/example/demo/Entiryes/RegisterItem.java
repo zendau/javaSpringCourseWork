@@ -14,8 +14,7 @@ public class RegisterItem {
     private int price1;
     private int price2;
     private int worker;
-    private String providerName;
-    private String providerPhone;
+    private int provider;
 
 
     public void setName(int name) {
@@ -73,14 +72,10 @@ public class RegisterItem {
         return this.worker;
     }
 
-    public void setProviderName(String providerName) {
-        this.providerName = providerName;
+    public void setProvider(int provider) {
+        this.provider = provider;
     }
-    public String getProviderName() {return this.providerName;}
+    public int getProvider() {return this.provider;}
 
-    public void setProviderPhone(String providerPhone) {
-        this.providerPhone = providerPhone;
-    }
-    public String getProviderPhone() {return this.providerPhone;}
 
 }
