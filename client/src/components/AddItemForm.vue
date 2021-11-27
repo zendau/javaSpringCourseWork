@@ -3,22 +3,22 @@
     <form @submit.prevent="formSubmit" class="form-container">
       <div>
         <label for="name">Название товара</label>
-        <input v-model="name" id="name" type="text" placeholder="Название товара">
+        <input v-model="name" id="name" type="text" placeholder="Название товара" required>
       </div>
 
       <div>
         <label for="image">Изображение товара</label>
-        <input id="image" ref="inputImage" type="file" placeholder="Изображение товара">
+        <input id="image" ref="inputImage" type="file" placeholder="Изображение товара" required>
       </div>
 
-      <select v-model="itemCategory">
+      <select v-model="itemCategory" required>
         <option disabled value="" selected>Выберите одну из категорий</option>
         <option v-for="item in categories" :key="item">{{item}}</option>
       </select>
 
       <img v-if="edit" class="form-img" :src="'http://localhost:8080/'+image" alt="">
 
-      <textarea v-model="desk" placeholder="Описание" id="desk" cols="30" rows="10"></textarea>
+      <textarea v-model="desk" placeholder="Описание" id="desk" cols="30" rows="10" required></textarea>
       <input type="submit" :value="edit ? 'Изменить товар' : 'Добавить товар'" class="btn btn-primary">
       <router-link v-if="edit" :to="'/delete/goods/'+itemId" class="btn btn-primary">Удалить</router-link>
     </form>
@@ -51,6 +51,11 @@
       form.append('file', this.$refs.inputImage.files[0])
       form.append("id", this.itemId)
 
+
+      this.name = ""
+      this.itemCategory = ""
+      this.desk = ""
+      this.image = ""
 
       this.$emit("updateFilter", form)
 

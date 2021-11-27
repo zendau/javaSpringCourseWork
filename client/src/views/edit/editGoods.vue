@@ -58,11 +58,15 @@ export default {
     }
   },
   methods: {
-    formSubmit(form) {
+    async formSubmit(form) {
 
-      $api.put("/goods/editGoods", form)
-          .then((res) => this.itemData[3] = res)
-          .catch(() => this.update(true, 50))
+      const res = await $api.put("/goods/editGoods", form)
+
+      if (res.data.errorCode) {
+        this.update(true, 50)
+      } else {
+        await this.$router.push("/edit")
+      }
     },
     onChange() {
 

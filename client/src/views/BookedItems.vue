@@ -1,5 +1,5 @@
 <template>
-  <table class="table">
+  <table class="table" v-if="bookedItems.length > 0">
     <thead>
     <tr>
       <th>№</th>
@@ -36,6 +36,7 @@
     </tr>
     </tbody>
   </table>
+  <h1 v-else>Забронированные товары отсутствуют</h1>
 </template>
 
 <script>
@@ -68,6 +69,8 @@ export default {
 </script>
 
 <style scoped lang="scss">
-
+  h1 {
+    margin-top: 50px;
+  }
 
 </style>

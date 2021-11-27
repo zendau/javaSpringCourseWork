@@ -10,6 +10,7 @@ import Edit from "../views/Edit";
 import Add from "../views/Add";
 import addCategories from "../views/add/addCategories";
 import addRoles from "../views/add/addRoles";
+import addProvider from "../views/add/addProvider"
 import addWorkers from "../views/add/addWorkers";
 import editCategories from "../views/edit/editCategories";
 import editGoods from "../views/edit/editGoods";
@@ -24,6 +25,7 @@ import All_items from "../views/All_items";
 import login from "../views/login";
 import Exit from "../views/Exit";
 import basket from "../views/basket";
+import editProviderWaybills from "../views/edit/editProviderWaybills";
 
 const routes = [
   {
@@ -123,6 +125,14 @@ const routes = [
     }
   },
   {
+    path: '/addProvider',
+    name: 'addProvider',
+    component: addProvider,
+    meta: {
+      requiresAuth: true
+    }
+  },
+  {
     path: '/addWorkers',
     name: 'addWorkers',
     component: addWorkers,
@@ -150,6 +160,14 @@ const routes = [
     path: '/editProviders',
     name: 'editProviders',
     component: editProviders,
+    meta: {
+      requiresAuth: true
+    }
+  },
+  {
+    path: '/editProviderWaybills',
+    name: 'editProviderWaybills',
+    component: editProviderWaybills,
     meta: {
       requiresAuth: true
     }

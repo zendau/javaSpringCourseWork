@@ -13,10 +13,10 @@
     <tbody>
     <tr v-for="item in SCCs" :key="item[0]">
       <td>{{item[0]}}</td>
-      <td><input type="number" v-model="item[1]"></td>
-      <td><input type="date" v-model="item[2]"></td>
-      <td><input type="date" v-model="item[3]"></td>
-      <td><input type="text" v-model="item[4]"></td>
+      <td><input type="number" v-model="item[1]" required></td>
+      <td><input type="date" v-model="item[2]" required></td>
+      <td><input type="date" v-model="item[3]" required></td>
+      <td><input type="text" v-model="item[4]" required></td>
       <td>
         <router-link :to="'/delete/stockcontrolcard/'+item[0]">Удалить</router-link>
       </td>
@@ -37,11 +37,17 @@ export default {
     }
   },
   methods: {
-    editData() {
+    async editData() {
 
-      $api.put("/goods/editSCC", {
+      const res = await $api.put("/goods/editSCC", {
         param: this.SCCs
       })
+
+      if (res.data.errorCode) {
+        this.update(true, res.data.errorCode)
+      } else {
+        await this.$router.push("/edit")
+      }
 
     }
   },

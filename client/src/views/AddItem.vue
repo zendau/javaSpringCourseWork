@@ -15,11 +15,17 @@ export default {
 
     }
   },
+  inject: ["update"],
   methods: {
-    formSubmit(form) {
+    async formSubmit(form) {
 
-      $api.post("/goods/add", form)
+      const res = await $api.post("/goods/add", form)
 
+      if (res.data[0] === "error") {
+        this.update(true, 56)
+      } else {
+        this.update(true, 57)
+      }
     }
 
   },

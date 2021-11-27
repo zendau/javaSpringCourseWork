@@ -1,16 +1,12 @@
 package com.example.demo.Controllers;
 
 import com.example.demo.Entiryes.*;
-import org.apache.tomcat.util.http.fileupload.ByteArrayOutputStream;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import javax.imageio.ImageIO;
-import java.awt.image.BufferedImage;
 import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
-import java.io.InputStream;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
@@ -87,7 +83,6 @@ public class GoodsController {
             provider.add(resultSet.getString("providerId"));
             provider.add(resultSet.getString("name"));
             provider.add(resultSet.getString("phone"));
-            provider.add(resultSet.getString("waybillId"));
 
             providers.add(provider);
         }
@@ -233,6 +228,31 @@ public class GoodsController {
 
     }
 
+    @GetMapping("/providerWaybills")
+    public ArrayList getProviderWaybills() throws SQLException {
+
+        Statement statement = connection.createStatement();
+        String SQL = "SELECT * FROM providerWaybills";
+        ResultSet resultSet =  statement.executeQuery(SQL);
+
+        ArrayList waybills = new ArrayList<>();
+        ArrayList waybill;
+
+        while (resultSet.next()) {
+
+            waybill = new ArrayList<>();
+
+            waybill.add(resultSet.getString("id"));
+            waybill.add(resultSet.getString("providerId"));
+            waybill.add(resultSet.getString("waybillId"));
+
+            waybills.add(waybill);
+        }
+
+        return waybills;
+
+    }
+
     @GetMapping("/couriers")
     public ArrayList getCouriers() throws SQLException {
 
@@ -305,7 +325,7 @@ public class GoodsController {
     }
 
     @PostMapping("/add")
-    public String addItem(@RequestParam("category") String category,
+    public String[] addItem(@RequestParam("category") String category,
                        @RequestParam("name") String name,
                        @RequestParam("description") String description,
                        @RequestParam("file") MultipartFile file) throws SQLException {
@@ -346,12 +366,13 @@ public class GoodsController {
 
                 preparedStatement.executeUpdate();
 
-                return name;
+                return new String[]{fileName};
             } catch (Exception e) {
-                return "Вам не удалось загрузить " + name + " => " + e.getMessage();
+                return new String[]{"error", "Вам не удалось загрузить " + name + " => " + e.getMessage()};
             }
         } else {
-            return "Вам не удалось загрузить " + name + " потому что файл пустой.";
+            return new String[]{"error", "Вам не удалось загрузить " + name + " потому что файл пустой."};
+
         }
 
 
@@ -402,6 +423,24 @@ public class GoodsController {
             PreparedStatement preparedStatement = connection.prepareStatement(SQL);
             preparedStatement.setString(1, newItem.getRole());
             preparedStatement.setString(2, newItem.getDescription());
+
+            int result = preparedStatement.executeUpdate();
+            return result;
+        } catch (SQLException e) {
+            return e;
+        }
+    }
+
+    @PostMapping("/addProvider")
+    public Object addProvider(@RequestBody Providers newItem) {
+
+        String SQL = "INSERT INTO providers (name , phone) VALUE (?, ?)";
+
+        try {
+
+            PreparedStatement preparedStatement = connection.prepareStatement(SQL);
+            preparedStatement.setString(1, newItem.getName());
+            preparedStatement.setString(2, newItem.getPhone());
 
             int result = preparedStatement.executeUpdate();
             return result;
@@ -515,96 +554,134 @@ public class GoodsController {
     }
 
     @PostMapping("/register")
-    public void registerItem(@RequestBody RegisterItem newItem) throws SQLException {
+    public SQLException registerItem(@RequestBody RegisterItem newItem) {
 
-        for (int i = 0; i < newItem.getCount(); i++) {
+        try {
+            for (int i = 0; i < newItem.getCount(); i++) {
 
-            String SQL = "INSERT INTO stockcontrolcard (price, arrivadDate, place) VALUE (?, ?, ?)";
+                String SQL = "INSERT INTO stockcontrolcard (price, arrivadDate, place) VALUE (?, ?, ?)";
 
-            PreparedStatement preparedStatement = connection.prepareStatement(SQL, new String[]{"id"});
-            preparedStatement.setInt(1, newItem.getPrice1());
-            preparedStatement.setString(2, newItem.getArrivedDate());
-            preparedStatement.setString(3, newItem.getPlace());
+                PreparedStatement preparedStatement = connection.prepareStatement(SQL, new String[]{"id"});
+                preparedStatement.setInt(1, newItem.getPrice1());
+                preparedStatement.setString(2, newItem.getArrivedDate());
+                preparedStatement.setString(3, newItem.getPlace());
 
-            int insertedId = 0;
+                int insertedId = 0;
 
-            int result = preparedStatement.executeUpdate();
-            if (result > 0) {
+                int result = preparedStatement.executeUpdate();
+                if (result > 0) {
 
-                try { ResultSet rs = preparedStatement.getGeneratedKeys();
-                    if (rs.next()) {
-                        insertedId = rs.getInt(1);
+                    try { ResultSet rs = preparedStatement.getGeneratedKeys();
+                        if (rs.next()) {
+                            insertedId = rs.getInt(1);
+                        }
+                    } catch (SQLException e) {
+                        System.out.println(e);
                     }
-                } catch (SQLException e) {
-                    System.out.println(e);
                 }
-            }
 
 
-            SQL = "INSERT INTO waybill (createdDate, itemId, count, price, SccId, waybillName, recipientId) VALUE (?, ?, ?, ?, ?, ?, ?)";
+                SQL = "INSERT INTO waybill (createdDate, itemId, count, price, SccId, waybillName, recipientId) VALUE (?, ?, ?, ?, ?, ?, ?)";
 
-            preparedStatement = connection.prepareStatement(SQL,  new String[]{"id"});
-            preparedStatement.setString(1, newItem.getArrivedDate());
-            preparedStatement.setInt(2, newItem.getName());
-            preparedStatement.setInt(3, newItem.getCount());
-            preparedStatement.setInt(4, newItem.getPrice2());
-            preparedStatement.setInt(5, insertedId);
-            preparedStatement.setString(6, newItem.getNumberOfWaybill());
-            preparedStatement.setInt(7, newItem.getWorker());
+                preparedStatement = connection.prepareStatement(SQL,  new String[]{"id"});
+                preparedStatement.setString(1, newItem.getArrivedDate());
+                preparedStatement.setInt(2, newItem.getName());
+                preparedStatement.setInt(3, newItem.getCount());
+                preparedStatement.setInt(4, newItem.getPrice2());
+                preparedStatement.setInt(5, insertedId);
+                preparedStatement.setString(6, newItem.getNumberOfWaybill());
+                preparedStatement.setInt(7, newItem.getWorker());
 
-            int insertedIdWaybill = 0;
+                int insertedIdWaybill = 0;
 
-            result = preparedStatement.executeUpdate();
-            if (result > 0) {
+                result = preparedStatement.executeUpdate();
+                if (result > 0) {
 
-                try { ResultSet rs = preparedStatement.getGeneratedKeys();
-                    if (rs.next()) {
-                        insertedIdWaybill = rs.getInt(1);
+                    try { ResultSet rs = preparedStatement.getGeneratedKeys();
+                        if (rs.next()) {
+                            insertedIdWaybill = rs.getInt(1);
+                        }
+                    } catch (SQLException e) {
+                        System.out.println(e);
                     }
-                } catch (SQLException e) {
-                    System.out.println(e);
                 }
+
+                SQL = "INSERT INTO storage (workerId, itemId, SccId) VALUE (?, ?, ?)";
+
+                preparedStatement = connection.prepareStatement(SQL);
+                preparedStatement.setInt(1, newItem.getWorker());
+                preparedStatement.setInt(2, newItem.getName());
+                preparedStatement.setInt(3, insertedId);
+
+                preparedStatement.executeUpdate();
+
+                SQL = "INSERT INTO providerwaybills (providerId, waybillId) VALUE (?, ?)";
+
+                preparedStatement = connection.prepareStatement(SQL);
+                preparedStatement.setInt(1, newItem.getProvider());
+                preparedStatement.setInt(2, insertedIdWaybill);
+
+                preparedStatement.executeUpdate();
             }
-
-            SQL = "INSERT INTO storage (workerId, itemId, SccId) VALUE (?, ?, ?)";
-
-            preparedStatement = connection.prepareStatement(SQL);
-            preparedStatement.setInt(1, newItem.getWorker());
-            preparedStatement.setInt(2, newItem.getName());
-            preparedStatement.setInt(3, insertedId);
-
-            preparedStatement.executeUpdate();
-
-            SQL = "INSERT INTO providers (name, phone, waybillId) VALUE (?, ?, ?)";
-
-            preparedStatement = connection.prepareStatement(SQL);
-            preparedStatement.setString(1, newItem.getProviderName());
-            preparedStatement.setString(2, newItem.getProviderPhone());
-            preparedStatement.setInt(3, insertedIdWaybill);
-
-            preparedStatement.executeUpdate();
+        } catch (SQLException e) {
+            return e;
         }
+
+
+        return null;
     }
 
     @PutMapping("/editGoods")
-    public void editGoods(@RequestBody LinkedHashMap param) throws SQLException {
+    public String editGoods(@RequestParam("category") String category,
+                          @RequestParam("name") String name,
+                          @RequestParam("description") String description,
+                          @RequestParam("id") int id,
+                          @RequestParam("file") MultipartFile file) throws SQLException {
 
-        ArrayList<ArrayList> values = (ArrayList) param.get("param");
+        if (!file.isEmpty()) {
+            try {
+                byte[] bytes = file.getBytes();
 
-        for (int i = 0; i < values.size(); i++) {
 
-            ArrayList data = values.get(i);
+                String type = file.getContentType().split("/")[1];
 
-            String SQL = "UPDATE goods SET name = ?, category = ? , image = ?, description = ? WHERE id = ?";
+                String chars = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
+                Random rnd = new Random();
+                StringBuilder sb = new StringBuilder(10);
+                for (int i = 0; i < 10; i++)
+                    sb.append(chars.charAt(rnd.nextInt(chars.length())));
 
-            PreparedStatement preparedStatement = connection.prepareStatement(SQL);
-            preparedStatement.setString(1, (String) data.get(1));
-            preparedStatement.setString(2, (String) data.get(2));
-            preparedStatement.setString(3, (String) data.get(3));
-            preparedStatement.setString(4, (String) data.get(4));
-            preparedStatement.setInt(5, Integer.parseInt((String) data.get(0)));
-            preparedStatement.executeUpdate();
+                String rnbName = sb.toString();
 
+                String fileName = rnbName + "." + type;
+
+                String path = "src/main/resources/static/"+fileName;
+
+                BufferedOutputStream stream =
+                        new BufferedOutputStream(new FileOutputStream(new File(path)));
+
+
+                stream.write(bytes);
+                stream.close();
+
+
+                String SQL = "UPDATE goods SET name = ?, category = ? , image = ?, description = ? WHERE id = ?";
+
+                PreparedStatement preparedStatement = connection.prepareStatement(SQL);
+                preparedStatement.setString(1, name);
+                preparedStatement.setString(2, category);
+                preparedStatement.setString(3, fileName);
+                preparedStatement.setString(4, description);
+                preparedStatement.setInt(5, id);
+
+                preparedStatement.executeUpdate();
+
+                return fileName;
+            } catch (Exception e) {
+                return "Вам не удалось загрузить " + name + " => " + e.getMessage();
+            }
+        } else {
+            return "Вам не удалось загрузить " + name + " потому что файл пустой.";
         }
     }
 
@@ -617,13 +694,33 @@ public class GoodsController {
 
             ArrayList data = values.get(i);
 
-            String SQL = "UPDATE providers SET name = ?,  phone = ?, waybillId = ? WHERE providerId = ?";
+            String SQL = "UPDATE providers SET name = ?,  phone = ? WHERE providerId = ?";
 
             PreparedStatement preparedStatement = connection.prepareStatement(SQL);
             preparedStatement.setString(1, (String) data.get(1));
             preparedStatement.setString(2, (String) data.get(2));
-            preparedStatement.setInt(3, Integer.parseInt((String) data.get(3)));
-            preparedStatement.setInt(4, Integer.parseInt((String) data.get(0)));
+            preparedStatement.setInt(3, Integer.parseInt((String) data.get(0)));
+            preparedStatement.executeUpdate();
+
+        }
+    }
+
+
+    @PutMapping("/editProviderWaybills")
+    public void editProviderWaybills(@RequestBody LinkedHashMap param) throws SQLException {
+
+        ArrayList<ArrayList> values = (ArrayList) param.get("param");
+
+        for (int i = 0; i < values.size(); i++) {
+
+            ArrayList data = values.get(i);
+
+            String SQL = "UPDATE providerwaybills SET providerId = ?,  waybillId = ? WHERE id = ?";
+
+            PreparedStatement preparedStatement = connection.prepareStatement(SQL);
+            preparedStatement.setInt(1, Integer.parseInt((String) data.get(1)));
+            preparedStatement.setInt(2, Integer.parseInt((String) data.get(2)));
+            preparedStatement.setInt(3, Integer.parseInt((String) data.get(0)));
             preparedStatement.executeUpdate();
 
         }

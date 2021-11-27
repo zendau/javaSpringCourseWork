@@ -5,21 +5,14 @@
       <th>№</th>
       <th>Имя поставщика</th>
       <th>Номер телефона</th>
-      <th>Накладная</th>
       <th>Удаление записи</th>
     </tr>
     </thead>
     <tbody>
     <tr v-for="item in providers" :key="item[0]">
       <td>{{item[0]}}</td>
-      <td><input type="text" v-model="item[1]"></td>
-      <td><input type="text" v-model="item[2]"></td>
-      <td>
-        <select v-model="item[3]">
-          <option disabled value="" selected>Выберите категорию</option>
-          <option v-for="waybill in waybills" :key="waybill[0]">{{waybill[0]}}</option>
-        </select>
-      </td>
+      <td><input type="text" v-model="item[1]" required></td>
+      <td><input type="text" v-model="item[2]" required></td>
       <td>
         <router-link :to="'/delete/providers/'+item[0]">Удалить</router-link>
       </td>
@@ -37,27 +30,26 @@ export default {
   data() {
     return {
       providers: [],
-      waybills: []
     }
   },
   methods: {
-    editData() {
+    async editData() {
 
-      $api.put("/goods/editProviders", {
+      const res = await $api.put("/goods/editProviders", {
         param: this.providers
       })
+
+      if (res.data.errorCode) {
+        this.update(true, res.data.errorCode)
+      } else {
+        await this.$router.push("/edit")
+      }
 
     }
   },
   async mounted() {
     const resProviders = await $api.get("/goods/providers")
     this.providers = resProviders.data
-
-    const resWaybills = await $api.get("/goods/waybills")
-    this.waybills = resWaybills.data
-
-    console.log(this.categories, this.storages, this.goods)
-
   }
 }
 </script>

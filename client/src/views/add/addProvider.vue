@@ -2,11 +2,13 @@
   <div class="form-container">
     <form @submit.prevent="formSubmit">
       <div>
-        <label for="role">Роль</label>
-        <input v-model="name" id="role" type="text" placeholder="Введите роль" required>
+        <label for="name">Имя поставщика</label>
+        <input v-model="name" id="name" type="text" placeholder="Введите имя" required>
       </div>
-
-      <textarea v-model="desk" placeholder="Описание" id="desk" cols="30" rows="10" required></textarea>
+      <div>
+        <label for="hone">Номер</label>
+        <input v-model="phone" id="hone" type="text" placeholder="Введите номер" required>
+      </div>
       <input type="submit" value="Добавить" class="btn btn-primary">
     </form>
 
@@ -21,15 +23,15 @@ export default {
   data() {
     return {
       name: "",
-      desk: "",
+      phone: "",
     }
   },
   inject: ['update'],
   methods: {
     async formSubmit() {
-      const res = await $api.post("/goods/addRoles", {
-        role: this.name,
-        description: this.desk,
+      const res = await $api.post("/goods/addProvider", {
+        name: this.name,
+        phone: this.phone,
       })
 
       if (res.data.errorCode) {

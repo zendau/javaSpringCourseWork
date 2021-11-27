@@ -16,24 +16,24 @@
     <tbody>
     <tr v-for="item in waybills" :key="item[0]">
       <td>{{item[0]}}</td>
-      <td><input type="date" v-model="item[1]"></td>
+      <td><input type="date" v-model="item[1]" required></td>
       <td>
-        <select name="" id="" v-model="item[2]">
+        <select name="" id="" v-model="item[2]" required>
           <option disabled value="" selected>Выберите номер товара</option>
           <option v-for="good in goods" :key="good[0]">{{good[0]}}</option>
         </select>
       </td>
-      <td><input type="number"  v-model="item[3]"></td>
-      <td><input type="number" v-model="item[4]"></td>
+      <td><input type="number"  v-model="item[3]" required></td>
+      <td><input type="number" v-model="item[4]" required></td>
       <td>
-        <select name="" id="" v-model="item[5]">
+        <select name="" id="" v-model="item[5]" required>
           <option disabled value="" selected>Выберите карточку складского учета</option>
           <option v-for="waybill in SCCs" :key="waybill[0]">{{waybill[0]}}</option>
         </select>
       </td>
-      <td><input type="text" v-model="item[6]"></td>
+      <td><input type="text" v-model="item[6]" required></td>
       <td>
-        <select name="" id="" v-model="item[7]">
+        <select name="" id="" v-model="item[7]" required>
           <option disabled value="" selected>Выберите карточку складского учета</option>
           <option v-for="worker in workers" :key="worker[0]">{{worker[0]}}</option>
         </select>
@@ -61,11 +61,17 @@ export default {
     }
   },
   methods: {
-    editData() {
+    async editData() {
 
-      $api.put("/goods/editWaybills", {
+      const res = await $api.put("/goods/editWaybills", {
         param: this.waybills
       })
+
+      if (res.data.errorCode) {
+        this.update(true, res.data.errorCode)
+      } else {
+        await this.$router.push("/edit")
+      }
 
     }
   },

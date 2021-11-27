@@ -9,11 +9,13 @@
     <RouterLink class="link" to="/editRoles">Роли</RouterLink>
     <RouterLink class="link" to="/editStorage">Склады</RouterLink>
     <RouterLink class="link" to="/editWaybills">Накладные</RouterLink>
+    <RouterLink class="link" to="/editProviderWaybills">Накладные поставщиков</RouterLink>
   </div>
 </template>
 
 <script>
 export default {
+  name: "editData",
   data() {
     return {
 

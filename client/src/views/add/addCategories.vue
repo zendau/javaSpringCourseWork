@@ -3,9 +3,9 @@
     <form @submit.prevent="formSubmit">
       <div>
         <label for="name">Название Категории</label>
-        <input v-model="name" id="name" type="text" placeholder="Введите название">
+        <input v-model="name" id="name" type="text" placeholder="Введите название" required>
       </div>
-      <textarea v-model="desk" placeholder="Описание" id="desk" cols="30" rows="10"></textarea>
+      <textarea v-model="desk" placeholder="Описание" id="desk" cols="30" rows="10" required></textarea>
       <input type="submit" value="Добавить" class="btn btn-primary">
     </form>
 
@@ -31,7 +31,13 @@ export default {
         description: this.desk,
       })
 
-      this.update(true, res.data.errorCode)
+      if (res.data.errorCode) {
+        this.update(true, res.data.errorCode)
+      } else {
+        await this.$router.push("/add")
+      }
+
+
 
     },
 

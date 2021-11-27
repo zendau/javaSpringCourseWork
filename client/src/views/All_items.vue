@@ -23,6 +23,7 @@
 </template>
 
 <script>
+  import $api from "../axios";
 
   export default {
     data() {
@@ -44,6 +45,15 @@
           return this.items.filter(item => item[2] === this.categoryId)
         }
       }
+    },
+    async mounted() {
+
+      const resCategories = await $api.get("/goods/category")
+      this.categories = resCategories.data
+
+      const resStorage = await $api.get("/goods/all")
+      this.items = resStorage.data
+
     }
   }
 

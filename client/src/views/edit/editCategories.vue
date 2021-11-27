@@ -11,8 +11,8 @@
     <tbody>
     <tr v-for="item in categories" :key="item[0]">
       <td>{{item[0]}}</td>
-      <td><input type="text" v-model="item[1]"></td>
-      <td><input type="text" v-model="item[2]"></td>
+      <td><input type="text" v-model="item[1]" required></td>
+      <td><input type="text" v-model="item[2]" required></td>
       <td>
         <router-link :to="'/delete/categories/'+item[0]">Удалить</router-link>
       </td>
@@ -41,7 +41,11 @@ export default {
         param: this.categories
       })
 
-      this.update(true, res.data.errorCode)
+      if (res.data.errorCode) {
+        this.update(true, res.data.errorCode)
+      } else {
+        await this.$router.push("/edit")
+      }
 
     }
   },

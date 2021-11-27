@@ -53,9 +53,10 @@ export default {
   mounted() {
     let basket = localStorage.getItem("basket")
 
-
-    if (basket !== null || basket !== "") {
+    try {
       this.basketData = JSON.parse(basket)
+    } catch (e) {
+      this.basketData = []
     }
 
     console.log(this.basketData)
@@ -72,7 +73,7 @@ export default {
         if (id !== index) return item
       })
 
-      localStorage.setItem("basket", this.basketData)
+      localStorage.setItem("basket", JSON.stringify(this.basketData))
     }
   },
   computed: {

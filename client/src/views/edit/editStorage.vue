@@ -13,19 +13,19 @@
     <tr v-for="item in storages" :key="item[0]">
       <td>{{item[0]}}</td>
       <td>
-        <select name="" id="" v-model="item[1]">
+        <select name="" id="" v-model="item[1]" required>
           <option disabled value="" selected>Выберите кладовщика</option>
           <option v-for="worker in workers" :key="worker[0]">{{worker[0]}}</option>
         </select>
       </td>
       <td>
-        <select name="" id="" v-model="item[2]">
+        <select name="" id="" v-model="item[2]" required>
           <option disabled value="" selected>Выберите карточку складского учета</option>
           <option v-for="waybill in SCCs" :key="waybill[0]">{{waybill[0]}}</option>
         </select>
       </td>
       <td>
-        <select name="" id="" v-model="item[3]">
+        <select name="" id="" v-model="item[3]" required>
           <option disabled value="" selected>Выберите номер предмета</option>
           <option v-for="item in items" :key="item[0]">{{item[0]}}</option>
         </select>
@@ -53,11 +53,17 @@ export default {
     }
   },
   methods: {
-    editData() {
+     async editData() {
 
-      $api.put("/goods/editStorage", {
+       const res = await $api.put("/goods/editStorage", {
         param: this.storages
       })
+
+       if (res.data.errorCode) {
+         this.update(true, res.data.errorCode)
+       } else {
+         await this.$router.push("/edit")
+       }
 
     }
   },

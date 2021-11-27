@@ -3,7 +3,7 @@
     <form @submit.prevent="formSubmit">
       <div>
         <label for="name">Имя работника</label>
-        <input id="name" type="text" placeholder="Имя работника" v-model="name">
+        <input id="name" type="text" placeholder="Имя работника" v-model="name" required>
       </div>
       <div>
         <p>Работник:</p>
@@ -14,19 +14,19 @@
       </div>
       <div>
         <label for="birthday">День рождения</label>
-        <input id="birthday" v-model="birthday" type="date" placeholder="День рождения">
+        <input id="birthday" v-model="birthday" type="date" placeholder="День рождения" required>
       </div>
       <div>
         <label for="phone">Номер телефона</label>
-        <input id="phone" type="text" v-model="phone" placeholder="Номер телефона">
+        <input id="phone" type="text" v-model="phone" placeholder="Номер телефона" required>
       </div>
       <div>
         <label for="address">Адрес</label>
-        <input id="address" v-model="address" type="text" placeholder="Адрес">
+        <input id="address" v-model="address" type="text" placeholder="Адрес" required>
       </div>
       <div>
         <label for="salary">Зарплата</label>
-        <input id="salary" v-model="salary" type="number" placeholder="Зарплата">
+        <input id="salary" v-model="salary" type="number" placeholder="Зарплата" required>
       </div>
       <input type="submit" value="Добавить" class="btn btn-primary">
     </form>
@@ -52,8 +52,8 @@ export default {
     }
   },
   methods: {
-    formSubmit() {
-      $api.post("/goods/addWorkers", {
+    async formSubmit() {
+      const res = await $api.post("/goods/addWorkers", {
         salary: this.salary,
         workerName: this.name,
         birthday: this.birthday,
@@ -61,6 +61,12 @@ export default {
         role: this.role,
         phone: this.phone
       })
+
+      if (res.data.errorCode) {
+        this.update(true, res.data.errorCode)
+      } else {
+        await this.$router.push("/add")
+      }
     }
   },
   async mounted() {
