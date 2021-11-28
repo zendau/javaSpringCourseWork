@@ -1,5 +1,4 @@
 <template>
-  <h1>Корзина</h1>
   <div v-if="basketData.length > 0">
     <table class="table">
       <thead>
@@ -88,7 +87,7 @@ export default {
 <style scoped>
 
   h1 {
-    margin-top: 10px;
+    margin-top: 50px;
     margin-bottom: 30px;
   }
 

@@ -4,18 +4,15 @@
       <a class="navbar-brand" href="#">Виртуальный магазин</a>
       <div class="collapse navbar-collapse" id="navbarSupportedContent">
         <ul class="navbar-nav me-auto mb-2 mb-lg-0" v-if="getAuthStatus">
-          <li class="nav-item">
-            <router-link to="/newItem" class="nav-link">Добавление товаров</router-link>
-          </li>
-          <li class="nav-item">
-            <router-link to="/addItem" class="nav-link">Регистрация товара</router-link>
-          </li>
-          <li class="nav-item">
-            <router-link to="/add" class="nav-link">Добавление</router-link>
-          </li>
-          <li class="nav-item">
-            <router-link to="/edit" class="nav-link">Редактирование</router-link>
-          </li>
+          <dropdown-element title="Товары">
+            <router-link to="/newItem" class="dropdown-item">Добавление товара</router-link>
+            <router-link to="/addItem" class="dropdown-item">Регистрация товара</router-link>
+          </dropdown-element>
+          <dropdown-element title="Администрирование">
+            <router-link to="/add" class="dropdown-item">Добавление</router-link>
+            <router-link to="/edit" class="dropdown-item">Редактирование/Удаление</router-link>
+          </dropdown-element>
+
           <li class="nav-item">
             <router-link to="/BookedItems" class="nav-link">Забронированные товары</router-link>
           </li>
@@ -49,8 +46,10 @@
 </template>
 
 <script>
+import DropdownElement from "./UI/dropdown";
 export default {
   name: "navbarComponent",
+  components: {DropdownElement},
   computed: {
     getAuthStatus() {
       return this.$store.state.authStatus

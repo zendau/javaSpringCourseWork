@@ -5,7 +5,7 @@
 </template>
 
 <script>
-import modalMessage from "./components/modalMessage";
+import modalMessage from "./components/UI/modalMessage";
 import NavbarComponent from "./components/navbar";
 export default {
   components: {NavbarComponent, modalMessage},

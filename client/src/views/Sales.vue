@@ -2,36 +2,47 @@
   <div>
     <h1>Продажи</h1>
 
+    <select v-model="selectedItem" @change="onChange">
+      <option disabled value="" selected>Выберите наименование товара</option>
+      <option value="0">Все</option>
+      <option v-for="item in goods" :key="item" :value="item[0]">{{item[1]}}({{item[0]}})</option>
+    </select>
+
     <input type="date" v-model="beforeDate">
     <input type="date" v-model="afterDate">
 
     <button class="btn btn-primary" @click="activeFilter">Применить фильтр</button>
+    <button class="btn btn-primary" @click="resetFilters">Сбросить фильтры</button>
+    <div v-show="filteredItems.length > 0">
+      <table class="table table-striped">
+        <tbody>
+        <tr>
+          <th>№</th>
+          <th>Название товара</th>
+          <th>Цена</th>
+          <th>Дата получения</th>
+          <th>Дата продажи</th>
+          <th>Почта покупателя</th>
+          <th>Кол-во</th>
+          <th>Номер накладной</th>
+        </tr>
+        <tr v-for="(item, index) in filteredItems" :key="index">
+          <td>{{item[0]}}</td>
+          <td>{{item[1]}}</td>
+          <td>{{new Intl.NumberFormat('ru-RU', { style: 'currency', currency: 'RUB' }).format(item[2])}}</td>
+          <td>{{item[3]}}</td>
+          <td>{{item[4]}}</td>
+          <td>{{item[5]}}</td>
+          <td>{{item[6]}}</td>
+          <td>{{item[7]}}</td>
+        </tr>
+        </tbody>
+      </table>
+      <h2>График продаж</h2>
+      <canvas id="myChart"></canvas>
+    </div>
+    <h1 v-show="filteredItems.length === 0">Товаров не найдено</h1>
 
-    <table class="table table-striped">
-      <tbody>
-      <tr>
-        <th>№</th>
-        <th>Название товара</th>
-        <th>Цена</th>
-        <th>Дата получения</th>
-        <th>Дата продажи</th>
-        <th>Почта покупателя</th>
-        <th>Кол-во</th>
-        <th>Номер накладной</th>
-      </tr>
-      <tr v-for="(item, index) in items" :key="index">
-        <td>{{item[0]}}</td>
-        <td>{{item[1]}}</td>
-        <td>{{new Intl.NumberFormat('ru-RU', { style: 'currency', currency: 'RUB' }).format(item[2])}}</td>
-        <td>{{item[3]}}</td>
-        <td>{{item[4]}}</td>
-        <td>{{item[5]}}</td>
-        <td>{{item[6]}}</td>
-        <td>{{item[7]}}</td>
-      </tr>
-      </tbody>
-    </table>
-    <canvas id="myChart"></canvas>
   </div>
 </template>
 
@@ -49,17 +60,23 @@ export default {
       items: [],
       afterDate: "",
       beforeDate: "",
-      chart: null
+      chart: null,
+      goods: [],
+      selectedItem: "",
+      filteredItems: []
     }
   },
   async mounted() {
+
+    const resGoods = await $api.get("/goods/items")
+    this.goods = resGoods.data
 
     const resWorkers = await $api.get("/reverence/sales")
     this.sales = resWorkers.data
 
     this.items = this.sales
 
-    this.paintChar()
+
 
   },
   provide: [],
@@ -76,7 +93,7 @@ export default {
         const afterDate = new Date(this.afterDate)
 
         if (beforeDate < afterDate) {
-          this.items = this.sales.filter(date => {
+          this.filteredItems = this.sales.filter(date => {
             const tempDate = new Date(date[4])
 
             if (tempDate >= beforeDate && tempDate <= afterDate) {
@@ -84,6 +101,8 @@ export default {
             }
 
           })
+
+
 
         } else {
           console.log("Введенная дата 'После' не должна быть меньше введенной даты 'До'")
@@ -94,6 +113,11 @@ export default {
           this.paintChar()
           console.log(this.beforeDate, this.afterDate)
 
+    },
+    resetFilters () {
+      this.items = this.sales
+      this.filteredItems = this.items
+      this.selectedItem = ""
     },
     paintChar() {
 
@@ -108,7 +132,7 @@ export default {
       const prices = []
       const dates = []
 
-      this.items.forEach(item => {
+      this.filteredItems.forEach(item => {
         prices.push(item[2])
         dates.push(item[4])
       })
@@ -136,7 +160,16 @@ export default {
           ctx,
           config
       );
+    },
+  },
+  watch: {
+    selectedItem: function (newVal) {
+
+      this.filteredItems = newVal === "0" ? this.items : this.items.filter(item => item[0] === newVal)
+      this.paintChar()
     }
+  },
+  computed: {
   }
 }
 </script>
@@ -144,6 +177,6 @@ export default {
 <style scoped>
   #myChart {
     width: 1000px!important;
-    margin: 0 auto;
+    margin: 0 auto 50px;
   }
 </style>
