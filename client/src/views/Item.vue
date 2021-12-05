@@ -9,7 +9,7 @@
         <div class="wrapper">
           <p>Категория: {{itemData[2]}}</p>
           <p>Доступность: есть на складе</p>
-          <p>Описание модели: {{itemData[4]}}</p>
+          <p class="juctify">Описание модели: {{itemData[4]}}</p>
           <p>Цена: {{getCurrency}}</p>
           <div>
             <label for="count">Количество: </label>
@@ -78,6 +78,8 @@ export default {
 
       localStorage.setItem("basket", JSON.stringify(basket))
 
+      this.$router.push("/shop")
+
     }
   }
 }
@@ -121,6 +123,10 @@ export default {
   .btn {
     margin-top: 15px;
     width: 200px;
+  }
+
+  .juctify {
+    text-align: justify;
   }
 
 </style>

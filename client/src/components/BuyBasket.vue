@@ -37,21 +37,21 @@ export default {
     async buyBasket() {
 
       const data = {
-        items: [
-          {
-            id: 0,
-            count: 0
-          }
-        ],
+        items: [],
         mailOfBuyer: ""
       }
 
 
-      this.items.forEach((item,index) => {
-        data.items[index].id = item.itemData[0]
-        data.items[index].count = item.count
+
+      this.items.forEach(item => {
+
+        data.items.push({
+          id: item.itemData[0],
+          count: item.count
+        })
       })
 
+      console.log(data)
 
       data.mailOfBuyer = this.email
 

@@ -65,7 +65,7 @@
       display: grid;
       grid-template-columns: 1fr 1fr 1fr;
       width: 1000px;
-      margin: 0 auto;
+      margin: 0 auto 50px;
     }
 
     .item {

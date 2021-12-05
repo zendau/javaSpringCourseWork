@@ -30,14 +30,14 @@
         </div>
 
         <div>
-          <label for="price1">Цена при получении</label>
-          <input v-model="price1" id="price1" type="number" placeholder="Цена при получении" required>
+          <label for="price1">Цена для продажи</label>
+          <input v-model="price1" id="price1" type="number" placeholder="Цена для продажи" required>
         </div>
 
 
         <div>
-          <label for="price2">Цена для продажи</label>
-          <input v-model="price2" id="price2" type="number" placeholder="Цена для продажи" required>
+          <label for="price2">Цена при получении</label>
+          <input v-model="price2" id="price2" type="number" placeholder="Цена при получении" required>
         </div>
 
 

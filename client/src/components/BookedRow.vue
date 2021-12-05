@@ -1,10 +1,10 @@
 <template>
   <td>{{index+1}}</td>
-  <td>{{item[2]}}</td>
+  <td>{{item[0]}}</td>
   <td> <router-link :to="'/item/'+item[1]">{{item[1]}}</router-link></td>
+  <td>{{item[2]}}</td>
   <td>{{item[3]}}</td>
   <td>{{item[4]}}</td>
-  <td>{{item[5]}}</td>
 
   <td>
     <select name="" id="" v-model="selectedCourier">
@@ -35,13 +35,19 @@ export default {
       if (this.selectedCourier === "") {
         this.update(true, 12)
       } else {
-        const res = await $api.post("/goods/saleGoods", {
+
+        const obj = {
           courierId: this.selectedCourier,
           itemId: this.item[1],
-          count: this.item[5],
-          saleId: this.item[0],
-          sccId: this.item[6]
-        })
+          count: this.item[4],
+          saleId: this.item[5]
+        }
+
+
+        console.log("test", obj)
+
+        const res = await $api.post("/goods/saleGoods", obj)
+
         if (res.data === 24) {
           this.update(true, 24)
         }
@@ -53,7 +59,7 @@ export default {
       await $api.delete("/goods/delete", {
         data: {
           type: "sales",
-          id:  this.item[0]
+          id:  this.item[5]
         }
       })
 

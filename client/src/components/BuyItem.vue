@@ -9,7 +9,7 @@
             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" @click="closeModal"></button>
           </div>
           <div class="modal-body">
-            <form>
+            <form @submit.prevent="buyItem">
               <div class="mb-3">
                 <label for="email" class="form-label">Введите ваш email</label>
                 <input type="email" class="form-control" id="email" required v-model="email" placeholder="user@gmail.com"/>
@@ -46,6 +46,7 @@ export default {
         count: this.countOfItems
       })
       this.closeModal()
+      this.$router.push("/shop")
     }
   },
   data() {

@@ -25,7 +25,7 @@
       <button class="btn btn-success" @click="buyBasket = true">Купить</button>
     </div>
 
-    <buy-basket v-if="buyBasket" @closeModal="buyBasket = false" :items="basketData" :currency="totalPayable"/>
+    <buy-basket v-if="buyBasket" @closeModal="closeModal" :items="basketData" :currency="getPrice"/>
   </div>
   <div v-else>
     <h1>Корзина пуста</h1>
@@ -72,6 +72,11 @@ export default {
         if (id !== index) return item
       })
 
+      localStorage.setItem("basket", JSON.stringify(this.basketData))
+    },
+    closeModal() {
+      this.buyBasket = false
+      this.basketData = []
       localStorage.setItem("basket", JSON.stringify(this.basketData))
     }
   },

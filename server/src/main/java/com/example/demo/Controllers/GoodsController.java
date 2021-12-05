@@ -190,6 +190,8 @@ public class GoodsController {
             stockcontrolcard.add(resultSet.getString("arrivadDate"));
             stockcontrolcard.add(resultSet.getString("issueDate"));
             stockcontrolcard.add(resultSet.getString("place"));
+            stockcontrolcard.add(resultSet.getString("waybillId"));
+            stockcontrolcard.add(resultSet.getString("saleId"));
 
             stockcontrolcards.add(stockcontrolcard);
         }
@@ -217,7 +219,6 @@ public class GoodsController {
             waybill.add(resultSet.getString("itemId"));
             waybill.add(resultSet.getString("count"));
             waybill.add(resultSet.getString("price"));
-            waybill.add(resultSet.getString("SccId"));
             waybill.add(resultSet.getString("waybillName"));
             waybill.add(resultSet.getString("recipientId"));
 
@@ -527,7 +528,7 @@ public class GoodsController {
     @GetMapping("/BookedItems")
     public ArrayList getBookedItems() throws SQLException  {
         Statement statement = connection.createStatement();
-        String SQL = "SELECT s.*, g.name, storage.SccId AS SCC FROM sales s INNER JOIN goods g ON s.itemId = g.id INNER JOIN storage ON  g.id = storage.itemId WHERE s.courier IS NULL";
+        String SQL = "SELECT g.name, s.itemId, s.dateOfSale, s.mailOfBuyer, s.count, s.id FROM sales s INNER JOIN goods g ON g.id = s.itemId WHERE s.courier IS NULL";
         ResultSet resultSet =  statement.executeQuery(SQL);
 
 
@@ -539,13 +540,12 @@ public class GoodsController {
 
             item = new ArrayList<>();
 
-            item.add(resultSet.getString("id"));
-            item.add(resultSet.getString("itemId"));
             item.add(resultSet.getString("name"));
+            item.add(resultSet.getString("itemId"));
             item.add(resultSet.getString("dateOfSale"));
             item.add(resultSet.getString("mailOfBuyer"));
             item.add(resultSet.getString("count"));
-            item.add(resultSet.getString("SCC"));
+            item.add(resultSet.getString("id"));
 
             items.add(item);
         }
@@ -557,18 +557,53 @@ public class GoodsController {
     public SQLException registerItem(@RequestBody RegisterItem newItem) {
 
         try {
+
+            String SQL = "";
+
+            SQL = "INSERT INTO waybill (createdDate, itemId, count, price, waybillName, recipientId) VALUE (?, ?, ?, ?, ?, ?)";
+
+            PreparedStatement preparedStatement = connection.prepareStatement(SQL,  new String[]{"id"});
+            preparedStatement.setString(1, newItem.getArrivedDate());
+            preparedStatement.setInt(2, newItem.getName());
+            preparedStatement.setInt(3, newItem.getCount());
+            preparedStatement.setInt(4, newItem.getPrice2());
+            preparedStatement.setString(5, newItem.getNumberOfWaybill());
+            preparedStatement.setInt(6, newItem.getWorker());
+
+            int waybillId = 0;
+
+            int result = preparedStatement.executeUpdate();
+            if (result > 0) {
+
+                try { ResultSet rs = preparedStatement.getGeneratedKeys();
+                    if (rs.next()) {
+                        waybillId = rs.getInt(1);
+                    }
+                } catch (SQLException e) {
+                    System.out.println(e);
+                }
+            }
+
+            SQL = "INSERT INTO providerwaybills (providerId, waybillId) VALUE (?, ?)";
+
+            preparedStatement = connection.prepareStatement(SQL);
+            preparedStatement.setInt(1, newItem.getProvider());
+            preparedStatement.setInt(2, waybillId);
+
+            preparedStatement.executeUpdate();
+
+            int insertedId = 0;
+
             for (int i = 0; i < newItem.getCount(); i++) {
+                SQL = "INSERT INTO stockcontrolcard (price, arrivadDate, place, waybillId) VALUE (?, ?, ?, ?)";
 
-                String SQL = "INSERT INTO stockcontrolcard (price, arrivadDate, place) VALUE (?, ?, ?)";
-
-                PreparedStatement preparedStatement = connection.prepareStatement(SQL, new String[]{"id"});
+                preparedStatement = connection.prepareStatement(SQL, new String[]{"id"});
                 preparedStatement.setInt(1, newItem.getPrice1());
                 preparedStatement.setString(2, newItem.getArrivedDate());
                 preparedStatement.setString(3, newItem.getPlace());
+                preparedStatement.setInt(4, waybillId);
 
-                int insertedId = 0;
-
-                int result = preparedStatement.executeUpdate();
+                result = preparedStatement.executeUpdate();
                 if (result > 0) {
 
                     try { ResultSet rs = preparedStatement.getGeneratedKeys();
@@ -581,30 +616,6 @@ public class GoodsController {
                 }
 
 
-                SQL = "INSERT INTO waybill (createdDate, itemId, count, price, SccId, waybillName, recipientId) VALUE (?, ?, ?, ?, ?, ?, ?)";
-
-                preparedStatement = connection.prepareStatement(SQL,  new String[]{"id"});
-                preparedStatement.setString(1, newItem.getArrivedDate());
-                preparedStatement.setInt(2, newItem.getName());
-                preparedStatement.setInt(3, newItem.getCount());
-                preparedStatement.setInt(4, newItem.getPrice2());
-                preparedStatement.setInt(5, insertedId);
-                preparedStatement.setString(6, newItem.getNumberOfWaybill());
-                preparedStatement.setInt(7, newItem.getWorker());
-
-                int insertedIdWaybill = 0;
-
-                result = preparedStatement.executeUpdate();
-                if (result > 0) {
-
-                    try { ResultSet rs = preparedStatement.getGeneratedKeys();
-                        if (rs.next()) {
-                            insertedIdWaybill = rs.getInt(1);
-                        }
-                    } catch (SQLException e) {
-                        System.out.println(e);
-                    }
-                }
 
                 SQL = "INSERT INTO storage (workerId, itemId, SccId) VALUE (?, ?, ?)";
 
@@ -615,14 +626,9 @@ public class GoodsController {
 
                 preparedStatement.executeUpdate();
 
-                SQL = "INSERT INTO providerwaybills (providerId, waybillId) VALUE (?, ?)";
-
-                preparedStatement = connection.prepareStatement(SQL);
-                preparedStatement.setInt(1, newItem.getProvider());
-                preparedStatement.setInt(2, insertedIdWaybill);
-
-                preparedStatement.executeUpdate();
             }
+
+
         } catch (SQLException e) {
             return e;
         }
@@ -790,7 +796,7 @@ public class GoodsController {
 
             ArrayList data = values.get(i);
 
-            String SQL = "UPDATE stockcontrolcard SET price = ?, arrivadDate = ?, issueDate = ?, place = ? WHERE id = ?";
+            String SQL = "UPDATE stockcontrolcard SET price = ?, arrivadDate = ?, issueDate = ?, place = ?, waybillId = ?, saleId = ? WHERE id = ?";
 
             PreparedStatement preparedStatement = connection.prepareStatement(SQL);
 
@@ -803,7 +809,9 @@ public class GoodsController {
             preparedStatement.setString(2, (String) data.get(2));
             preparedStatement.setString(3, (String) data.get(3));
             preparedStatement.setString(4, (String) data.get(4));
-            preparedStatement.setInt(5, Integer.parseInt((String) data.get(0)));
+            preparedStatement.setString(5, (String) data.get(5));
+            preparedStatement.setString(6, (String) data.get(6));
+            preparedStatement.setInt(7, Integer.parseInt((String) data.get(0)));
             preparedStatement.executeUpdate();
 
         }
@@ -963,7 +971,8 @@ public class GoodsController {
     @PostMapping("/saleGoods")
     public Object saleGoods(@RequestBody SaleGoods saleGoods) throws SQLException {
 
-        String SQL = "START TRANSACTION;";
+        String SQL = "";
+        SQL = "START TRANSACTION;";
         Statement statement = connection.createStatement();
         statement.executeUpdate(SQL);
 
@@ -1002,13 +1011,19 @@ public class GoodsController {
                 statement.executeUpdate(SQL);
 
                 statement = connection.createStatement();
-                SQL = "UPDATE stockcontrolcard SET issueDate = CURDATE() WHERE id = "+SCC;
-                statement.executeUpdate(SQL);
+                SQL = "UPDATE stockcontrolcard SET issueDate = CURDATE(), saleId = ? WHERE id = ?";
+
+                PreparedStatement preparedStatement = connection.prepareStatement(SQL);
+
+                preparedStatement.setInt(1, saleGoods.getSaleId());
+                preparedStatement.setInt(2, Integer.parseInt(SCC));
+
+                preparedStatement.executeUpdate();
 
             }
 
             statement = connection.createStatement();
-            SQL = "UPDATE sales SET courier = "+saleGoods.getCourierId()+", sccId = "+saleGoods.getSccId()+" WHERE id = "+saleGoods.getSaleId()+";";
+            SQL = "UPDATE sales SET courier = "+saleGoods.getCourierId()+" WHERE id = "+saleGoods.getSaleId()+";";
             statement.executeUpdate(SQL);
 
             statement = connection.createStatement();
